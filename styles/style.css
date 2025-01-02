@@ -1,0 +1,105 @@
+.heraldPlayerlist {
+    position: fixed;
+    top: 50%;
+    left: 35vw;
+    transform: translateX(-50%);
+    width: 50%;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.heraldPlayerlist-container {
+    display: flex;
+    width: 100%;
+}
+
+
+.heraldPlayerlist-playerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 17vw;
+}
+
+/* .heraldPlayerlist-playerActor{
+    padding-bottom: 10px;
+} */
+
+.heraldPlayerlist-leftActor {
+    flex: 0 0 auto;
+    width: 55px;
+    height: 55px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    z-index: 5;
+}
+
+.heraldPlayerlist-actorImage {
+    width: 50px;
+    height: 50px;
+    border: none;
+}
+
+.heraldPlayerlist-rightContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+.heraldPlayerlist-tokenname {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: white;
+    margin-left: 5px;
+}
+
+.heraldPlayerlist-hpbarContainer {
+    position: absolute;
+    margin-top: 15px;
+    left: 30px;
+    width: 200px;
+    height: 20px;
+    background-color: rgb(46, 46, 46);
+    border: 2px solid black;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+}
+
+.heraldPlayerlist-hpbar {
+    width: 0;
+    height: 100%;
+    background-color: #4CAF50;
+    position: relative;
+    overflow: hidden; 
+}
+.heraldPlayerlist-hpvalue {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+   
+    color: white;
+    pointer-events: none; 
+  }
+
+.heraldPlayerlist-lowerbar {
+    display: flex;
+    gap: 2px;
+    margin-left: 3vw;
+}
+
+.heraldPlayerlist-playerEffect {
+    border: 1px solid white;
+    width: 20px;
+    height: 20px;
+}
