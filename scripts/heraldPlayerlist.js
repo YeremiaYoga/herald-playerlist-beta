@@ -82,6 +82,7 @@ function heraldPlayerlist_renderlistPlayer() {
             <div id="heraldPlayerlist-hpbarContainer" class="heraldPlayerlist-hpbarContainer">
               <div class="heraldPlayerlist-hpbar" data-actor-id="${actor.uuid}"></div>
               <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
+              <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
             </div>
           </div>
         </div>
@@ -107,6 +108,10 @@ function heraldPlayerlist_updateHpActor() {
     const hpBar = document.querySelector(
       `.heraldPlayerlist-hpbar[data-actor-id="${actor.uuid}"]`
     );
+
+    const tempHpBar = document.querySelector(
+      `.heraldPlayerlist-tempvalue[data-actor-id="${actor.uuid}"]`
+    );
     if (hpBar) {
       hpBar.style.width = `${hpPercent}%`;
       if (hpPercent <= 10) {
@@ -124,6 +129,14 @@ function heraldPlayerlist_updateHpActor() {
     );
     if (hpvalue) {
       hpvalue.innerText = hp + "/" + maxHp;
+    }
+
+    if (tempHpBar) {
+      if (tempHp > 0) {
+        tempHpBar.innerText = "+" + tempHp;
+      } else {
+        tempHpBar.innerText = "";
+      }
     }
   }
 }
