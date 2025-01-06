@@ -1,5 +1,10 @@
 let heraldPlayerlist_listActorCanvas = [];
 
+let hp25 = "#FF0000";
+let hp50 = "#FFA500";
+let hp75 = "#FFFF00";
+let hp100 = "#008000";
+
 let heraldPlayerlist_showPlayerlist = true;
 
 async function heraldPlayerlist_getListActor() {
@@ -114,14 +119,14 @@ function heraldPlayerlist_updateHpActor() {
     );
     if (hpBar) {
       hpBar.style.width = `${hpPercent}%`;
-      if (hpPercent <= 10) {
-        hpBar.style.backgroundColor = "red";
-      } else if (hpPercent <= 30) {
-        hpBar.style.backgroundColor = "orange";
+      if (hpPercent <= 25) {
+        hpBar.style.backgroundColor = hp25;
       } else if (hpPercent <= 50) {
-        hpBar.style.backgroundColor = "yellow";
+        hpBar.style.backgroundColor = hp50;
+      } else if (hpPercent <= 75) {
+        hpBar.style.backgroundColor = hp75;
       } else {
-        hpBar.style.backgroundColor = "green";
+        hpBar.style.backgroundColor = hp100;
       }
     }
     const hpvalue = document.querySelector(
@@ -183,17 +188,33 @@ Hooks.on("updateActor", async (actor, data) => {
   }
 });
 
-function heraldPlayerlist_updateSettingValue(nameSetting, value) {
+Hooks.on("createToken", async () => {
+  heraldPlayerlist_getListActor();
+});
+
+Hooks.on("deleteToken", async () => {
+  heraldPlayerlist_getListActor();
+});
+
+function heraldPlayerlist_universalSettingValue(nameSetting, value) {
   if (nameSetting == "toggleShow") {
     heraldPlayerlist_showPlayerlist = value;
 
     heraldPlayerlist_createPlayerList();
   }
 
-  if (nameSetting == "leftDistance") {
-    const leftDistanceDiv = document.getElementById("heraldPlayerlist");
-    if (leftDistanceDiv) {
-      leftDistanceDiv.style.left = value + "vw";
+  if (nameSetting == "widthDistance") {
+    const widthDistanceDiv = document.getElementById("heraldPlayerlist");
+    if (widthDistanceDiv) {
+      widthDistanceDiv.style.left = value + "vw";
+    }
+  }
+
+  if (nameSetting == "heightDistance") {
+    const heightDistanceDiv = document.getElementById("heraldPlayerlist");
+    if (heightDistanceDiv) {
+      heightDistanceDiv.style.top = value + "vh";
+      console.timeLog(heightDistanceDiv);
     }
   }
 
@@ -209,33 +230,113 @@ function heraldPlayerlist_updateSettingValue(nameSetting, value) {
   }
 }
 
+function heraldPlayerlist_colorSettingValue(nameSetting, value) {
+  if (nameSetting == "actorNameColor") {
+    const actorNameColor = document.querySelectorAll(
+      ".heraldPlayerlist-tokenname"
+    );
+    if (actorNameColor.length > 0) {
+      actorNameColor.forEach((element) => {
+        element.style.color = value;
+      });
+    }
+  }
+  if (nameSetting == "tempHpColor") {
+    const tempHpColor = document.querySelectorAll(
+      ".heraldPlayerlist-tempvalue"
+    );
+    if (tempHpColor.length > 0) {
+      tempHpColor.forEach((element) => {
+        element.style.color = value;
+      });
+    }
+  }
+  if (nameSetting == "hp25Color") {
+    hp25 = value;
+    heraldPlayerlist_updateHpActor();
+  }
+  if (nameSetting == "hp50Color") {
+    hp50 = value;
+    heraldPlayerlist_updateHpActor();
+  }
+  if (nameSetting == "hp75Color") {
+    hp75 = value;
+    heraldPlayerlist_updateHpActor();
+  }
+  if (nameSetting == "hp100Color") {
+    hp100 = value;
+    heraldPlayerlist_updateHpActor();
+  }
+}
+
 function heraldPlayerlist_getSettingValue() {
   const toggleShow = game.settings.get(
     "herald-playerlist-beta",
     "heraldplayerlist_toggleShow"
   );
-  heraldPlayerlist_updateSettingValue("toggleShow", toggleShow);
-
-  const leftDistance = game.settings.get(
-    "herald-playerlist-beta",
-    "heraldplayerlist_leftDistance"
-  );
-  heraldPlayerlist_updateSettingValue("leftDistance", leftDistance);
+  heraldPlayerlist_universalSettingValue("toggleShow", toggleShow);
 
   setTimeout(() => {
+    const widthDistance = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_widthDistance"
+    );
+    heraldPlayerlist_universalSettingValue("widthDistance", widthDistance);
+
+    const heightDistance = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_heightDistance"
+    );
+    heraldPlayerlist_universalSettingValue("heightDistance", heightDistance);
+
     const fontSize = game.settings.get(
       "herald-playerlist-beta",
       "heraldplayerlist_fontSize"
     );
-    heraldPlayerlist_updateSettingValue("fontSize", fontSize);
-  }, 500);
+    heraldPlayerlist_universalSettingValue("fontSize", fontSize);
 
-  console.log("value");
+    const actorNameColor = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_actorNameColor"
+    );
+    heraldPlayerlist_colorSettingValue("actorNameColor", actorNameColor);
+
+    const tempHpColor = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_tempHpColor"
+    );
+    heraldPlayerlist_colorSettingValue("tempHpColor", tempHpColor);
+
+    const hp25Color = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_hp25Color"
+    );
+
+    hp25 = hp25Color;
+    const hp50Color = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_hp50Color"
+    );
+    hp50 = hp50Color;
+    const hp75Color = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_hp75Color"
+    );
+    hp75 = hp75Color;
+    const hp100Color = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_hp100Color"
+    );
+    hp100 = hp100Color;
+
+    heraldPlayerlist_updateHpActor();
+  }, 500);
 }
 
 export {
   heraldPlayerlist_getListActor,
   heraldPlayerlist_universalChecker,
   heraldPlayerlist_getSettingValue,
-  heraldPlayerlist_updateSettingValue,
+  heraldPlayerlist_universalSettingValue,
+  heraldPlayerlist_colorSettingValue,
 };
