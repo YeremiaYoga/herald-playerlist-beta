@@ -86,8 +86,9 @@ function heraldPlayerlist_renderlistPlayer() {
             </div>
             <div id="heraldPlayerlist-hpbarContainer" class="heraldPlayerlist-hpbarContainer">
               <div class="heraldPlayerlist-hpbar" data-actor-id="${actor.uuid}"></div>
+               <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
+             
               <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
             </div>
           </div>
         </div>
@@ -109,6 +110,7 @@ function heraldPlayerlist_updateHpActor() {
     const maxHp = actor.system.attributes.hp.max;
     const tempHp = actor.system.attributes.hp.temp || 0;
     const hpPercent = (hp / maxHp) * 100;
+    const tempPercentage = (tempHp / maxHp) * 100;
 
     const hpBar = document.querySelector(
       `.heraldPlayerlist-hpbar[data-actor-id="${actor.uuid}"]`
@@ -135,12 +137,12 @@ function heraldPlayerlist_updateHpActor() {
     if (hpvalue) {
       hpvalue.innerText = hp + "/" + maxHp;
     }
-
     if (tempHpBar) {
       if (tempHp > 0) {
-        tempHpBar.innerText = "+" + tempHp;
+        tempHpBar.style.width = `${tempPercentage}%`;
+        // tempHpBar.innerText = "+" + tempHp;
       } else {
-        tempHpBar.innerText = "";
+        tempHpBar.style.width = 0;
       }
     }
   }
@@ -190,10 +192,12 @@ Hooks.on("updateActor", async (actor, data) => {
 
 Hooks.on("createToken", async () => {
   heraldPlayerlist_getListActor();
+  heraldPlayerlist_getSettingValue();
 });
 
 Hooks.on("deleteToken", async () => {
   heraldPlayerlist_getListActor();
+  heraldPlayerlist_getSettingValue();
 });
 
 function heraldPlayerlist_universalSettingValue(nameSetting, value) {

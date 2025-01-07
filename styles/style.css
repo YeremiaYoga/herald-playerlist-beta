@@ -53,10 +53,10 @@
 .heraldPlayerlist-tokenname {
     position: absolute;
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 8px;
     color: #ffffff;
     margin-left: 5px;
-    text-shadow: 2px 2px 4px black; 
+    text-shadow: 2px 2px 4px black;
 }
 
 .heraldPlayerlist-hpbarContainer {
@@ -91,17 +91,24 @@
     pointer-events: none;
 }
 
-.heraldPlayerlist-tempvalue{
+.heraldPlayerlist-tempvalue {
     position: absolute;
-    top: 50%;
-    left: 110%;
-    transform: translate(-50%, -50%);
-    font-size: 14px;
-    font-weight: bold;
-    color: #018AE6; 
+    top: -5px;
+    /* width: 100%; */
+    height: calc(100% + 10px);
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-image: linear-gradient(to right, white, rgb(26, 209, 255)) 1;
+    box-sizing: border-box;
     pointer-events: none;
-    text-shadow: 1px 1px 2px #22A7FF;
+    transition: width 0.5s ease-in-out;
+    -webkit-transition: width 0.5s ease-in-out;
+    -moz-transition: width 0.5s ease-in-out;
+    -ms-transition: width 0.5s ease-in-out;
+    -o-transition: width 0.5s ease-in-out;
 }
+
+
 
 .heraldPlayerlist-lowerbar {
     display: flex;
