@@ -7,11 +7,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 190px;
 }
 
 .heraldPlayerlist-container {
     display: flex;
-    width: 100%;
+
 }
 
 
@@ -19,12 +20,12 @@
     display: flex;
     justify-content: space-between;
 
-    width: 17vw;
+
 }
 
-/* .heraldPlayerlist-playerActor{
-    padding-bottom: 10px;
-} */
+.heraldPlayerlist-playerActor {
+    width: 100%
+}
 
 .heraldPlayerlist-leftActor {
     flex: 0 0 auto;
@@ -51,6 +52,7 @@
 
 
 .heraldPlayerlist-tokenname {
+
     position: absolute;
     font-weight: bold;
     margin-top: 8px;
@@ -62,7 +64,7 @@
 .heraldPlayerlist-hpbarContainer {
     position: absolute;
     margin-top: 25px;
-    left: 26px;
+    left: 40px;
     width: 150px;
     height: 15px;
     background-color: rgb(46, 46, 46);
@@ -91,28 +93,63 @@
     pointer-events: none;
 }
 
-.heraldPlayerlist-tempvalue {
+.heraldPlayerlist-tempbartop {
     position: absolute;
     top: -5px;
-    /* width: 100%; */
     height: calc(100% + 10px);
     border-top: 3px solid transparent;
+  
+    border-image: linear-gradient(to right, white, rgb(26, 209, 255)) 1;
+    box-sizing: border-box;
+    pointer-events: none;
+    transition: width 0.5s ease-in-out;
+}
+
+.heraldPlayerlist-tempbarbottom {
+    position: absolute;
+    top: -5px;
+    height: calc(100% + 10px);
+
     border-bottom: 3px solid transparent;
     border-image: linear-gradient(to right, white, rgb(26, 209, 255)) 1;
     box-sizing: border-box;
     pointer-events: none;
     transition: width 0.5s ease-in-out;
-    -webkit-transition: width 0.5s ease-in-out;
-    -moz-transition: width 0.5s ease-in-out;
-    -ms-transition: width 0.5s ease-in-out;
-    -o-transition: width 0.5s ease-in-out;
+}
+
+
+.heraldPlayerlist-tempvalue {
+    position: absolute;
+    font-size: 16px;
+    color: rgb(26, 209, 255);
+    left: 150px;
+    top: -4px;
+}
+
+.heraldPlayerlist-tempshield {
+    position: absolute;
+    left: 25px;
+    margin-top: -15px;
+    z-index: 6;
+}
+
+.heraldPlayerlist-imgtempshield {
+    width: 20px;
+    border: none;
 }
 
 
 
-.heraldPlayerlist-lowerbar {
+/* .heraldPlayerlist-lowerbar {
+
     display: flex;
-    margin-top: 2px;
+
+} */
+
+.heraldPlayerlist-listeffect {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    margin-top: 4px;
     gap: 2px;
     margin-left: 2vw;
 }

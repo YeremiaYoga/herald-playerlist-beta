@@ -91,98 +91,122 @@ Hooks.on("init", () => {
     }
   );
 
-  game.settings.register("herald-playerlist-beta", "heraldplayerlist_actorNameColor", {
-    name: "Actor Name Color",
-    hint: "Set actor name color (e.g., '#ffb8b3')",
-    scope: "world",
-    config: true,
-    type: String,
-    default: "#ffffff",
-    category: "Color",
-    onChange: (value) => {
-      herald_playerlist.heraldPlayerlist_colorSettingValue(
-        "actorNameColor",
-        value
-      );
-    },
-  });
+  game.settings.register(
+    "herald-playerlist-beta",
+    "heraldplayerlist_actorNameColor",
+    {
+      name: "Actor Name Color",
+      hint: "Set actor name color (e.g., '#ffb8b3')",
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#ffffff",
+      category: "Color",
+      onChange: (value) => {
+        herald_playerlist.heraldPlayerlist_colorSettingValue(
+          "actorNameColor",
+          value
+        );
+      },
+    }
+  );
 
-  game.settings.register("herald-playerlist-beta", "heraldplayerlist_tempHpColor", {
-    name: "Temporary Hp Color",
-    hint: "Set temporary hp color (e.g., '#018AE6')",
-    scope: "world",
-    config: true,
-    type: String,
-    default: "#018AE6",
-    category: "Color",
-    onChange: (value) => {
-      herald_playerlist.heraldPlayerlist_colorSettingValue(
-        "tempHpColor",
-        value
-      );
-    },
-  });
-  game.settings.register("herald-playerlist-beta", "heraldplayerlist_hp25Color", {
-    name: "Hp Color at 0% - 25%",
-    hint: "Set hp color at 0% - 25% (e.g., '#FF0000')",
-    scope: "world",
-    config: true,
-    type: String,
-    default: "#FF0000",
-    category: "Color",
-    onChange: (value) => {
-      herald_playerlist.heraldPlayerlist_colorSettingValue(
-        "hp25Color",
-        value
-      );
-    },
-  });
+  game.settings.register(
+    "herald-playerlist-beta",
+    "heraldplayerlist_tempHpColor",
+    {
+      name: "Temporary Hp Color",
+      hint: "Set temporary hp color (e.g., '#018AE6')",
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#018AE6",
+      category: "Color",
+      onChange: (value) => {
+        herald_playerlist.heraldPlayerlist_colorSettingValue(
+          "tempHpColor",
+          value
+        );
+      },
+    }
+  );
+  game.settings.register(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp25Color",
+    {
+      name: "Hp Color at 0% - 25%",
+      hint: "Set hp color at 0% - 25% (e.g., '#FF0000')",
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#FF0000",
+      category: "Color",
+      onChange: (value) => {
+        herald_playerlist.heraldPlayerlist_colorSettingValue(
+          "hp25Color",
+          value
+        );
+      },
+    }
+  );
 
-  game.settings.register("herald-playerlist-beta", "heraldplayerlist_hp50Color", {
-    name: "Hp Color at 26% - 50%",
-    hint: "Set hp color at 26% - 50% (e.g., '#FFA500')",
-    scope: "world",
-    config: true,
-    type: String,
-    default: "#FFA500",
-    category: "Color",
-    onChange: (value) => {
-      herald_playerlist.heraldPlayerlist_colorSettingValue(
-        "hp50Color",
-        value
-      );
-    },
-  });
+  game.settings.register(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp50Color",
+    {
+      name: "Hp Color at 26% - 50%",
+      hint: "Set hp color at 26% - 50% (e.g., '#FFA500')",
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#FFA500",
+      category: "Color",
+      onChange: (value) => {
+        herald_playerlist.heraldPlayerlist_colorSettingValue(
+          "hp50Color",
+          value
+        );
+      },
+    }
+  );
 
-  game.settings.register("herald-playerlist-beta", "heraldplayerlist_hp75Color", {
-    name: "Hp Color at 51% - 75%",
-    hint: "Set hp color at 51% - 75% (e.g., '#FFFF00')",
-    scope: "world",
-    config: true,
-    type: String,
-    default: "#FFFF00",
-    category: "Color",
-    onChange: (value) => {
-      herald_playerlist.heraldPlayerlist_colorSettingValue(
-        "hp75Color",
-        value
-      );
-    },
-  });
+  game.settings.register(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp75Color",
+    {
+      name: "Hp Color at 51% - 75%",
+      hint: "Set hp color at 51% - 75% (e.g., '#FFFF00')",
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#FFFF00",
+      category: "Color",
+      onChange: (value) => {
+        herald_playerlist.heraldPlayerlist_colorSettingValue(
+          "hp75Color",
+          value
+        );
+      },
+    }
+  );
 
-  game.settings.register("herald-playerlist-beta", "heraldplayerlist_hp100Color", {
-    name: "Hp Color at 76% - 100%",
-    hint: "Set hp color at 76% - 100% (e.g., '#008000')",
-    scope: "world",
-    config: true,
-    type: String,
-    default: "#008000",
-    category: "Color",
-    onChange: (value) => {
-      herald_playerlist.heraldPlayerlist_colorSettingValue(
-        "hp100Color",
-        value
-      );
-    },
-  });
+  game.settings.register(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp100Color",
+    {
+      name: "Hp Color at 76% - 100%",
+      hint: "Set hp color at 76% - 100% (e.g., '#008000')",
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#008000",
+      category: "Color",
+      onChange: (value) => {
+        herald_playerlist.heraldPlayerlist_colorSettingValue(
+          "hp100Color",
+          value
+        );
+      },
+    }
+  );
 });
