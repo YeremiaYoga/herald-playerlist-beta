@@ -89,12 +89,61 @@ function heraldPlayerlist_renderlistPlayer() {
         }
       }
     }
+
     arrEffect.forEach((effect) => {
+      if (effect.target !== actor) {
+        return;
+      }
+
+      let stackDiv = "";
+      if (/\(\d+\)/.test(effect.name)) {
+        const match = effect.name.match(/\((\d+)\)/);
+        if (match) {
+          const number = parseInt(match[1], 10);
+          stackDiv = `<div class="heraldPlayerlist-stackeffect">${number}</div>`;
+        }
+      }
+
+      let durationDiv = "";
+      if (effect.duration.rounds > 0) {
+        durationDiv = `
+              <div class="heraldplayerlist-detaileffectduration">
+                ${effect.duration.rounds} rounds
+              </div>`;
+      }
+
+      const effectDetailDiv = `
+            <div class="heraldPlayerlist-effectdetail" style="display: none;">
+              <div class="heraldPlayerlist-effecttooltip">
+                <h3>${effect.name}</h3>
+                <div>
+                  <div>${effect.description}</div>
+                </div>
+                <div id="heraldPlayerlist-detaileffectbot" class="heraldPlayerlist-detaileffectbot">
+                  <div id="heraldPlayerlist-detaileffecttype" class="heraldPlayerlist-detaileffecttype">
+                    ${effect.isTemporary ? "Temporary" : "Passive"}
+                  </div>
+                  ${durationDiv}
+                </div>
+              </div>
+            </div>`;
+
       effectlist += `
-        <div>
-          <img src="${effect.img}" class="heraldPlayerlist-playerEffect" alt="${effect.name}" />
-        </div>`;
+            <div class="heraldPlayerlist-effectitem">
+              <div class="heraldPlayerlist-effectcontainer">
+                <img src="${effect.img}" alt="${effect.name}" class="heraldPlayerlist-playerEffect" />
+                ${stackDiv}
+              </div>
+              ${effectDetailDiv}
+            </div>`;
     });
+
+    // arrEffect.forEach((effect) => {
+    //   effectlist += `
+    //     <div>
+    //       <img src="${effect.img}" class="heraldPlayerlist-playerEffect" alt="${effect.name}" />
+    //     </div>`;
+    // });
 
     if (effectlist == ``) {
       effectlist = `
@@ -106,7 +155,7 @@ function heraldPlayerlist_renderlistPlayer() {
     listPLayer += `
     <div id="heraldPlayerlist-playerActor" class="heraldPlayerlist-playerActor">
         <div id="heraldPlayerlist-playerContainer" class="heraldPlayerlist-playerContainer">
-          <div id="heraldPlayerlist-leftContainer" class="heraldPlayerlist-leftActor">
+          <div id="heraldPlayerlist-leftContainer" class="heraldPlayerlist-leftContainer">
               <img src="${actor.img}" alt="Image" class="heraldPlayerlist-actorImage" />
           </div>
           <div id="heraldPlayerlist-rightContainer" class="heraldPlayerlist-rightContainer">
@@ -134,6 +183,15 @@ function heraldPlayerlist_renderlistPlayer() {
   }
 
   divListPlayer.innerHTML = listPLayer;
+  document.querySelectorAll(".heraldPlayerlist-effectitem").forEach((item) => {
+    const detailDiv = item.querySelector(".heraldPlayerlist-effectdetail");
+    item.addEventListener("mouseenter", () => {
+      if (detailDiv) detailDiv.style.display = "block";
+    });
+    item.addEventListener("mouseleave", () => {
+      if (detailDiv) detailDiv.style.display = "none";
+    });
+  });
 
   heraldPlayerlist_updateHpActor();
 }
