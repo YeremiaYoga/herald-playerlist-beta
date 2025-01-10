@@ -252,8 +252,8 @@ function heraldPlayerlist_updateHpActor() {
       }
       if (tempPercentage < 10) {
         console.log("cek");
-        tempHpBarTop.style.width = "10%";
-        tempHpBarBottom.style.width = `${tempPercentage + 1}%`;
+        tempHpBarTop.style.width = `${tempPercentage + 8}%`;
+        tempHpBarBottom.style.width = `${tempPercentage + 8}%`;
       }
     } else {
       tempHpBarTop.style.width = "";
