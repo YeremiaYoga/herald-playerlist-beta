@@ -152,13 +152,13 @@
 
 .heraldPlayerlist-tempshield {
     position: absolute;
-    left: 25px;
+    left: 35px;
     margin-top: -15px;
     z-index: 6;
 }
 
 .heraldPlayerlist-imgtempshield {
-    width: 20px;
+    width: 15px;
     border: none;
 }
 
