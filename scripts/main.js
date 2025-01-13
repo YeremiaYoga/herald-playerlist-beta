@@ -133,6 +133,26 @@ Hooks.on("init", () => {
 
   game.settings.register(
     "herald-playerlist-beta",
+    "heraldplayerlist_hpGradientColor",
+    {
+      name: "Hp Gradient Color",
+      hint: "Set hp gradient color (e.g., '#302c2c')",
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#302c2c",
+      category: "Color",
+      onChange: (value) => {
+        herald_playerlist.heraldPlayerlist_colorSettingValue(
+          "hpgradient",
+          value
+        );
+      },
+    }
+  );
+
+  game.settings.register(
+    "herald-playerlist-beta",
     "heraldplayerlist_hp0Color",
     {
       name: "Hp Color at bellow 0%",

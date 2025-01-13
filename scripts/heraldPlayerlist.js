@@ -96,7 +96,6 @@ function heraldPlayerlist_renderlistPlayer() {
         <div id="heraldPlayerlist-lowerbar" class="heraldPlayerlist-lowerbar" data-actor-id="${actor.uuid}">
          <div class="heraldPlayerlist-tempshield" data-actor-id="${actor.uuid}"></div>
         <div id="heraldPlayerlist-listeffect" class="heraldPlayerlist-listeffect" data-actor-id="${actor.uuid}">
-       
         </div>
        
         </div>
@@ -291,9 +290,9 @@ function heraldPlayerlist_updateEffectActor() {
     }
   }
 }
-let isDialogOpen = false;
+let heraldPlayerlist_dialogDeleteEffect = false;
 function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
-  if (isDialogOpen) {
+  if (heraldPlayerlist_dialogDeleteEffect) {
     console.log("Dialog already open, preventing duplicate.");
     return;
   }
@@ -306,9 +305,9 @@ function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
     console.error("Effect not found");
     return;
   }
-  isDialogOpen = true;
+  heraldPlayerlist_dialogDeleteEffect = true;
   const dialog = new Dialog({
-    title: "Delete Effect",
+    title: "Delete Effect Player",
     content: `
       <p>Are you sure you want to delete the effect <b>${effectToDelete.name}</b> from actor <b>${actor.name}</b>?</p>
     `,
@@ -317,15 +316,14 @@ function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
         label: "Delete",
         callback: () => {
           effectToDelete.delete();
-          console.log(`Effect ${effectId} deleted from actor ${actorUuid}`);
           heraldPlayerlist_updateEffectActor();
-          isDialogOpen = false;
+          heraldPlayerlist_dialogDeleteEffect = false;
         },
       },
       cancel: {
         label: "Cancel",
         callback: () => {
-          isDialogOpen = false;
+          heraldPlayerlist_dialogDeleteEffect = false;
           console.log("Effect deletion canceled");
         },
       },
@@ -384,7 +382,6 @@ function heraldPlayerlist_universalSettingValue(nameSetting, value) {
     const heightDistanceDiv = document.getElementById("heraldPlayerlist");
     if (heightDistanceDiv) {
       heightDistanceDiv.style.top = value + "vh";
-      console.timeLog(heightDistanceDiv);
     }
   }
 
@@ -418,6 +415,14 @@ function heraldPlayerlist_colorSettingValue(nameSetting, value) {
         element.style.color = value;
       });
     }
+  }
+  if (nameSetting == "hpgradient") {
+    hpgradient = value;
+    heraldPlayerlist_updateHpActor();
+  }
+  if (nameSetting == "hp0Color") {
+    hp0 = value;
+    heraldPlayerlist_updateHpActor();
   }
   if (nameSetting == "hp25Color") {
     hp25 = value;
@@ -474,6 +479,12 @@ function heraldPlayerlist_getSettingValue() {
       "heraldplayerlist_tempHpColor"
     );
     heraldPlayerlist_colorSettingValue("tempHpColor", tempHpColor);
+
+    const hpGradientColor = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_hpGradientColor"
+    );
+    hpgradient = hpGradientColor;
 
     const hp0Color = game.settings.get(
       "herald-playerlist-beta",
