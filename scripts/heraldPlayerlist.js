@@ -1,9 +1,10 @@
 let heraldPlayerlist_listActorCanvas = [];
-
-let hp25 = "#FF0000";
-let hp50 = "#FFA500";
-let hp75 = "#FFFF00";
-let hp100 = "#008000";
+let hp0 = "#8B0000";
+let hp25 = "#bc3c04";
+let hp50 = "#c47404";
+let hp75 = "#8c9c04";
+let hp100 = "#389454";
+let hpgradient = "#302c2c";
 
 let heraldPlayerlist_showPlayerlist = true;
 Hooks.on("canvasReady", async () => {
@@ -69,10 +70,124 @@ function heraldPlayerlist_createPlayerList() {
 }
 
 function heraldPlayerlist_renderlistPlayer() {
-  console.log("run");
   let listPLayer = ``;
   let divListPlayer = document.getElementById("heraldPlayerlist-listPlayer");
   const heraldPlayerlist = canvas.scene.getFlag("world", "heraldPlayerlist");
+  for (let actor of heraldPlayerlist_listActorCanvas) {
+    listPLayer += `
+    <div id="heraldPlayerlist-playerActor" class="heraldPlayerlist-playerActor">
+        <div id="heraldPlayerlist-playerContainer" class="heraldPlayerlist-playerContainer">
+          <div id="heraldPlayerlist-leftContainer" class="heraldPlayerlist-leftContainer">
+              <img src="${actor.img}" alt="Image" class="heraldPlayerlist-actorImage" />
+          </div>
+          <div id="heraldPlayerlist-rightContainer" class="heraldPlayerlist-rightContainer">
+            <div id="heraldPlayerlist-tokenname" class="heraldPlayerlist-tokenname">
+              ${actor.name}
+            </div>
+            <div id="heraldPlayerlist-hpbarContainer" class="heraldPlayerlist-hpbarContainer">
+              <div class="heraldPlayerlist-hpbar" data-actor-id="${actor.uuid}"></div>
+              <div class="heraldPlayerlist-tempbartop" data-actor-id="${actor.uuid}"></div>
+               <div class="heraldPlayerlist-tempbarbottom" data-actor-id="${actor.uuid}"></div>
+              <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
+              <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
+            </div>
+          </div>
+        </div>
+        <div id="heraldPlayerlist-lowerbar" class="heraldPlayerlist-lowerbar" data-actor-id="${actor.uuid}">
+         <div class="heraldPlayerlist-tempshield" data-actor-id="${actor.uuid}"></div>
+        <div id="heraldPlayerlist-listeffect" class="heraldPlayerlist-listeffect" data-actor-id="${actor.uuid}">
+       
+        </div>
+       
+        </div>
+      </div>
+    </div>`;
+  }
+
+  divListPlayer.innerHTML = listPLayer;
+
+  heraldPlayerlist_updateHpActor();
+  heraldPlayerlist_updateEffectActor();
+}
+
+function heraldPlayerlist_updateHpActor() {
+  for (let actor of heraldPlayerlist_listActorCanvas) {
+    const hp = actor.system.attributes.hp.value;
+    const maxHp = actor.system.attributes.hp.max;
+    const tempHp = actor.system.attributes.hp.temp || 0;
+    const hpPercent = (hp / maxHp) * 100;
+    let tempPercentage = (tempHp / maxHp) * 100;
+    if (tempPercentage > 100) {
+      tempPercentage = 100;
+    }
+
+    const hpBar = document.querySelector(
+      `.heraldPlayerlist-hpbar[data-actor-id="${actor.uuid}"]`
+    );
+
+    const tempHpBarTop = document.querySelector(
+      `.heraldPlayerlist-tempbartop[data-actor-id="${actor.uuid}"]`
+    );
+    const tempHpBarBottom = document.querySelector(
+      `.heraldPlayerlist-tempbarbottom[data-actor-id="${actor.uuid}"]`
+    );
+    const tempValue = document.querySelector(
+      `.heraldPlayerlist-tempvalue[data-actor-id="${actor.uuid}"]`
+    );
+    const tempShield = document.querySelector(
+      `.heraldPlayerlist-tempshield[data-actor-id="${actor.uuid}"]`
+    );
+    if (hpBar) {
+      hpBar.style.width = `${hpPercent}%`;
+      if (hpPercent < 0) {
+        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp0} 98%)`;
+      } else if (hpPercent <= 25) {
+        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp25} 98%)`;
+      } else if (hpPercent <= 50) {
+        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp50} 98%)`;
+      } else if (hpPercent <= 75) {
+        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp75} 98%)`;
+      } else {
+        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp100} 98%)`;
+      }
+    }
+    const hpvalue = document.querySelector(
+      `.heraldPlayerlist-hpvalue[data-actor-id="${actor.uuid}"]`
+    );
+    if (hpvalue) {
+      hpvalue.innerText = hp + "/" + maxHp;
+    }
+    if (tempHp) {
+      if (tempHp > 0) {
+        tempHpBarTop.style.width = `${tempPercentage}%`;
+        tempHpBarBottom.style.width = `${tempPercentage}%`;
+        tempValue.innerText = "+" + tempHp;
+        tempShield.innerHTML = `
+        <img src="/modules/herald-playerlist-beta/assets/temp_shield.png" alt="shield" class="heraldPlayerlist-imgtempshield" />
+        `;
+      }
+      if (tempPercentage < 10) {
+        console.log("cek");
+        tempHpBarTop.style.width = `${tempPercentage + 8}%`;
+        tempHpBarBottom.style.width = `${tempPercentage + 8}%`;
+      }
+    } else {
+      tempHpBarTop.style.width = "";
+      tempHpBarBottom.style.width = ``;
+      tempValue.innerText = "";
+      tempShield.innerHTML = ``;
+    }
+  }
+}
+
+function heraldPlayerlist_updateEffectActor() {
+  heraldPlayerlist_listActorCanvas = [];
+  const tokens = canvas.tokens.placeables;
+  for (let token of tokens) {
+    if (token.actor.type == "character") {
+      heraldPlayerlist_listActorCanvas.push(token.actor);
+    }
+  }
   for (let actor of heraldPlayerlist_listActorCanvas) {
     let effectlist = ``;
 
@@ -127,9 +242,8 @@ function heraldPlayerlist_renderlistPlayer() {
                 </div>
               </div>
             </div>`;
-
       effectlist += `
-            <div class="heraldPlayerlist-effectitem">
+            <div class="heraldPlayerlist-effectitem" data-effect-id="${effect.id}" data-actor-id="${actor.uuid}">
               <div class="heraldPlayerlist-effectcontainer">
                 <img src="${effect.img}" alt="${effect.name}" class="heraldPlayerlist-playerEffect" />
                 ${stackDiv}
@@ -138,13 +252,6 @@ function heraldPlayerlist_renderlistPlayer() {
             </div>`;
     });
 
-    // arrEffect.forEach((effect) => {
-    //   effectlist += `
-    //     <div>
-    //       <img src="${effect.img}" class="heraldPlayerlist-playerEffect" alt="${effect.name}" />
-    //     </div>`;
-    // });
-
     if (effectlist == ``) {
       effectlist = `
         <div>
@@ -152,141 +259,84 @@ function heraldPlayerlist_renderlistPlayer() {
         </div>`;
     }
 
-    listPLayer += `
-    <div id="heraldPlayerlist-playerActor" class="heraldPlayerlist-playerActor">
-        <div id="heraldPlayerlist-playerContainer" class="heraldPlayerlist-playerContainer">
-          <div id="heraldPlayerlist-leftContainer" class="heraldPlayerlist-leftContainer">
-              <img src="${actor.img}" alt="Image" class="heraldPlayerlist-actorImage" />
-          </div>
-          <div id="heraldPlayerlist-rightContainer" class="heraldPlayerlist-rightContainer">
-            <div id="heraldPlayerlist-tokenname" class="heraldPlayerlist-tokenname">
-              ${actor.name}
-            </div>
-            <div id="heraldPlayerlist-hpbarContainer" class="heraldPlayerlist-hpbarContainer">
-              <div class="heraldPlayerlist-hpbar" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-tempbartop" data-actor-id="${actor.uuid}"></div>
-               <div class="heraldPlayerlist-tempbarbottom" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
-            </div>
-          </div>
-        </div>
-        <div id="heraldPlayerlist-lowerbar" class="heraldPlayerlist-lowerbar" data-actor-id="${actor.uuid}">
-         <div class="heraldPlayerlist-tempshield" data-actor-id="${actor.uuid}"></div>
-        <div id="heraldPlayerlist-listeffect" class="heraldPlayerlist-listeffect">
-          ${effectlist}
-        </div>
-       
-        </div>
-      </div>
-    </div>`;
-  }
-
-  divListPlayer.innerHTML = listPLayer;
-  document.querySelectorAll(".heraldPlayerlist-effectitem").forEach((item) => {
-    const detailDiv = item.querySelector(".heraldPlayerlist-effectdetail");
-    item.addEventListener("mouseenter", () => {
-      if (detailDiv) detailDiv.style.display = "block";
-    });
-    item.addEventListener("mouseleave", () => {
-      if (detailDiv) detailDiv.style.display = "none";
-    });
-  });
-
-  heraldPlayerlist_updateHpActor();
-}
-
-function heraldPlayerlist_updateHpActor() {
-  for (let actor of heraldPlayerlist_listActorCanvas) {
-    const hp = actor.system.attributes.hp.value;
-    const maxHp = actor.system.attributes.hp.max;
-    const tempHp = actor.system.attributes.hp.temp || 0;
-    const hpPercent = (hp / maxHp) * 100;
-    let tempPercentage = (tempHp / maxHp) * 100;
-    if (tempPercentage > 100) {
-      tempPercentage = 100;
-    }
-
-    const hpBar = document.querySelector(
-      `.heraldPlayerlist-hpbar[data-actor-id="${actor.uuid}"]`
-    );
-
-    const tempHpBarTop = document.querySelector(
-      `.heraldPlayerlist-tempbartop[data-actor-id="${actor.uuid}"]`
-    );
-    const tempHpBarBottom = document.querySelector(
-      `.heraldPlayerlist-tempbarbottom[data-actor-id="${actor.uuid}"]`
-    );
-    const tempValue = document.querySelector(
-      `.heraldPlayerlist-tempvalue[data-actor-id="${actor.uuid}"]`
-    );
-    const tempShield = document.querySelector(
-      `.heraldPlayerlist-tempshield[data-actor-id="${actor.uuid}"]`
-    );
-    if (hpBar) {
-      hpBar.style.width = `${hpPercent}%`;
-      if (hpPercent <= 25) {
-        hpBar.style.backgroundColor = hp25;
-      } else if (hpPercent <= 50) {
-        hpBar.style.backgroundColor = hp50;
-      } else if (hpPercent <= 75) {
-        hpBar.style.backgroundColor = hp75;
-      } else {
-        hpBar.style.backgroundColor = hp100;
-      }
-    }
-    const hpvalue = document.querySelector(
-      `.heraldPlayerlist-hpvalue[data-actor-id="${actor.uuid}"]`
-    );
-    if (hpvalue) {
-      hpvalue.innerText = hp + "/" + maxHp;
-    }
-    if (tempHp) {
-      if (tempHp > 0) {
-        tempHpBarTop.style.width = `${tempPercentage}%`;
-        tempHpBarBottom.style.width = `${tempPercentage}%`;
-        tempValue.innerText = "+" + tempHp;
-        tempShield.innerHTML = `
-        <img src="/modules/herald-playerlist-beta/assets/temp_shield.png" alt="shield" class="heraldPlayerlist-imgtempshield" />
-        `;
-      }
-      if (tempPercentage < 10) {
-        console.log("cek");
-        tempHpBarTop.style.width = `${tempPercentage + 8}%`;
-        tempHpBarBottom.style.width = `${tempPercentage + 8}%`;
-      }
-    } else {
-      tempHpBarTop.style.width = "";
-      tempHpBarBottom.style.width = ``;
-      tempValue.innerText = "";
-      tempShield.innerHTML = ``;
-    }
-  }
-}
-
-function heraldPlayerlist_updateEffectActor() {
-  for (let actor of heraldPlayerlist_listActorCanvas) {
-    let effectlist = ``;
-    actor.effects.forEach((effect) => {
-      effectlist += `
-        <div>
-          <img src="${effect.img}" class="heraldPlayerlist-playerEffect" alt="${effect.name}" />
-        </div>`;
-    });
-
-    if (effectlist == ``) {
-      effectlist = `
-        <div>
-          <div class="heraldPlayerlist-playerEffect" style="opacity: 0;"></diiv>
-        </div>`;
-    }
     const listeffect = document.querySelector(
       `.heraldPlayerlist-listeffect[data-actor-id="${actor.uuid}"]`
     );
     if (listeffect) {
       listeffect.innerHTML = effectlist;
+      document
+        .querySelectorAll(".heraldPlayerlist-effectitem")
+        .forEach((item) => {
+          const detailDiv = item.querySelector(
+            ".heraldPlayerlist-effectdetail"
+          );
+          item.addEventListener("mouseenter", () => {
+            if (detailDiv) detailDiv.style.display = "block";
+          });
+          item.addEventListener("mouseleave", () => {
+            if (detailDiv) detailDiv.style.display = "none";
+          });
+        });
+
+      document
+        .querySelectorAll(".heraldPlayerlist-effectitem")
+        .forEach((item) => {
+          item.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+            const effectId = this.getAttribute("data-effect-id");
+            const actorUuid = this.getAttribute("data-actor-id");
+            heraldPlayerlist_deleteEffectActor(effectId, actorUuid);
+          });
+        });
     }
   }
+}
+let isDialogOpen = false;
+function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
+  if (isDialogOpen) {
+    console.log("Dialog already open, preventing duplicate.");
+    return;
+  }
+  const actor = canvas.tokens.placeables.find(
+    (token) => token.actor.uuid === actorUuid
+  ).actor;
+  const effectToDelete = actor.effects.find((effect) => effect.id === effectId);
+
+  if (!effectToDelete) {
+    console.error("Effect not found");
+    return;
+  }
+  isDialogOpen = true;
+  const dialog = new Dialog({
+    title: "Delete Effect",
+    content: `
+      <p>Are you sure you want to delete the effect <b>${effectToDelete.name}</b> from actor <b>${actor.name}</b>?</p>
+    `,
+    buttons: {
+      delete: {
+        label: "Delete",
+        callback: () => {
+          effectToDelete.delete();
+          console.log(`Effect ${effectId} deleted from actor ${actorUuid}`);
+          heraldPlayerlist_updateEffectActor();
+          isDialogOpen = false;
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        callback: () => {
+          isDialogOpen = false;
+          console.log("Effect deletion canceled");
+        },
+      },
+    },
+    default: "cancel",
+    close: () => {
+      console.log("Dialog closed");
+    },
+  });
+
+  dialog.render(true);
 }
 
 function heraldPlayerlist_universalChecker() {
@@ -425,6 +475,11 @@ function heraldPlayerlist_getSettingValue() {
     );
     heraldPlayerlist_colorSettingValue("tempHpColor", tempHpColor);
 
+    const hp0Color = game.settings.get(
+      "herald-playerlist-beta",
+      "heraldplayerlist_hp0Color"
+    );
+    hp0 = hp0Color;
     const hp25Color = game.settings.get(
       "herald-playerlist-beta",
       "heraldplayerlist_hp25Color"

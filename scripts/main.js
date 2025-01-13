@@ -60,7 +60,7 @@ Hooks.on("init", () => {
       scope: "world",
       config: true,
       type: Number,
-      default: 25,
+      default: 22,
       category: "",
       onChange: (value) => {
         herald_playerlist.heraldPlayerlist_universalSettingValue(
@@ -130,16 +130,36 @@ Hooks.on("init", () => {
       },
     }
   );
+
+  game.settings.register(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp0Color",
+    {
+      name: "Hp Color at bellow 0%",
+      hint: "Set hp color at bellow 0% (e.g., '#8B0000')",
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#8B0000",
+      category: "Color",
+      onChange: (value) => {
+        herald_playerlist.heraldPlayerlist_colorSettingValue(
+          "hp0Color",
+          value
+        );
+      },
+    }
+  );
   game.settings.register(
     "herald-playerlist-beta",
     "heraldplayerlist_hp25Color",
     {
       name: "Hp Color at 0% - 25%",
-      hint: "Set hp color at 0% - 25% (e.g., '#FF0000')",
+      hint: "Set hp color at 0% - 25% (e.g., '#bc3c04')",
       scope: "world",
       config: true,
       type: String,
-      default: "#FF0000",
+      default: "#bc3c04",
       category: "Color",
       onChange: (value) => {
         herald_playerlist.heraldPlayerlist_colorSettingValue(
@@ -155,11 +175,11 @@ Hooks.on("init", () => {
     "heraldplayerlist_hp50Color",
     {
       name: "Hp Color at 26% - 50%",
-      hint: "Set hp color at 26% - 50% (e.g., '#FFA500')",
+      hint: "Set hp color at 26% - 50% (e.g., '#c47404')",
       scope: "world",
       config: true,
       type: String,
-      default: "#FFA500",
+      default: "#c47404",
       category: "Color",
       onChange: (value) => {
         herald_playerlist.heraldPlayerlist_colorSettingValue(
@@ -175,11 +195,11 @@ Hooks.on("init", () => {
     "heraldplayerlist_hp75Color",
     {
       name: "Hp Color at 51% - 75%",
-      hint: "Set hp color at 51% - 75% (e.g., '#FFFF00')",
+      hint: "Set hp color at 51% - 75% (e.g., '#8c9c04')",
       scope: "world",
       config: true,
       type: String,
-      default: "#FFFF00",
+      default: "#8c9c04",
       category: "Color",
       onChange: (value) => {
         herald_playerlist.heraldPlayerlist_colorSettingValue(
@@ -195,11 +215,11 @@ Hooks.on("init", () => {
     "heraldplayerlist_hp100Color",
     {
       name: "Hp Color at 76% - 100%",
-      hint: "Set hp color at 76% - 100% (e.g., '#008000')",
+      hint: "Set hp color at 76% - 100% (e.g., '#389454')",
       scope: "world",
       config: true,
       type: String,
-      default: "#008000",
+      default: "#389454",
       category: "Color",
       onChange: (value) => {
         herald_playerlist.heraldPlayerlist_colorSettingValue(
