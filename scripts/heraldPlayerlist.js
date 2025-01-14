@@ -87,13 +87,18 @@ function heraldPlayerlist_renderlistPlayer() {
             <div id="heraldPlayerlist-hpbarContainer" class="heraldPlayerlist-hpbarContainer">
               <div class="heraldPlayerlist-hpbar" data-actor-id="${actor.uuid}"></div>
               <div class="heraldPlayerlist-tempbartop" data-actor-id="${actor.uuid}"></div>
-               <div class="heraldPlayerlist-tempbarbottom" data-actor-id="${actor.uuid}"></div>
+              <div class="heraldPlayerlist-tempbarbottom" data-actor-id="${actor.uuid}"></div>
               <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
               <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
+              <div class="heraldPlayerlist-tempmaxhp" data-actor-id="${actor.uuid}"></div>
             </div>
           </div>
         </div>
         <div id="heraldPlayerlist-lowerbar" class="heraldPlayerlist-lowerbar" data-actor-id="${actor.uuid}">
+        <div class="heraldPlayerlist-armorclass" data-actor-id="${actor.uuid}">
+           <img src="/modules/herald-playerlist-beta/assets/armor_class.webp" alt="Armor Class" class="heraldPlayerlist-armorclassimage" />
+           <div class="heraldPlayerlist-armorclassvalue" data-actor-id="${actor.uuid}"></div>
+        </div>
          <div class="heraldPlayerlist-tempshield" data-actor-id="${actor.uuid}"></div>
         <div id="heraldPlayerlist-listeffect" class="heraldPlayerlist-listeffect" data-actor-id="${actor.uuid}">
         </div>
@@ -114,12 +119,17 @@ function heraldPlayerlist_updateHpActor() {
     const hp = actor.system.attributes.hp.value;
     const maxHp = actor.system.attributes.hp.max;
     const tempHp = actor.system.attributes.hp.temp || 0;
-    const hpPercent = (hp / maxHp) * 100;
+
+    const tempmaxhp = actor.system.attributes.hp.tempmax;
+    const hpPercent = (hp / (maxHp + tempmaxhp)) * 100;
+
     let tempPercentage = (tempHp / maxHp) * 100;
     if (tempPercentage > 100) {
       tempPercentage = 100;
     }
-
+    const hpvalue = document.querySelector(
+      `.heraldPlayerlist-hpvalue[data-actor-id="${actor.uuid}"]`
+    );
     const hpBar = document.querySelector(
       `.heraldPlayerlist-hpbar[data-actor-id="${actor.uuid}"]`
     );
@@ -136,6 +146,13 @@ function heraldPlayerlist_updateHpActor() {
     const tempShield = document.querySelector(
       `.heraldPlayerlist-tempshield[data-actor-id="${actor.uuid}"]`
     );
+    const tempMaxHpDiv = document.querySelector(
+      `.heraldPlayerlist-tempmaxhp[data-actor-id="${actor.uuid}"]`
+    );
+
+    const armorClassDiv = document.querySelector(
+      `.heraldPlayerlist-armorclassvalue[data-actor-id="${actor.uuid}"]`
+    );
     if (hpBar) {
       hpBar.style.width = `${hpPercent}%`;
       if (hpPercent < 0) {
@@ -150,11 +167,20 @@ function heraldPlayerlist_updateHpActor() {
         hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp100} 98%)`;
       }
     }
-    const hpvalue = document.querySelector(
-      `.heraldPlayerlist-hpvalue[data-actor-id="${actor.uuid}"]`
-    );
+
     if (hpvalue) {
-      hpvalue.innerText = hp + "/" + maxHp;
+      hpvalue.innerText = hp + "/" + (maxHp + tempmaxhp);
+    }
+    if (tempMaxHpDiv) {
+      if (tempmaxhp) {
+        if (tempmaxhp > 0) {
+          tempMaxHpDiv.innerText = `(+${tempmaxhp})`;
+          tempMaxHpDiv.style.color = "#05b4ff";
+        } else {
+          tempMaxHpDiv.innerText = `(${tempmaxhp})`;
+          tempMaxHpDiv.style.color = "#b0001d";
+        }
+      }
     }
     if (tempHp) {
       if (tempHp > 0) {
@@ -175,6 +201,11 @@ function heraldPlayerlist_updateHpActor() {
       tempHpBarBottom.style.width = ``;
       tempValue.innerText = "";
       tempShield.innerHTML = ``;
+    }
+
+    if (armorClassDiv) {
+      const acValue = actor.system.attributes.ac.value;
+      armorClassDiv.innerText = acValue;
     }
   }
 }
