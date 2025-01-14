@@ -43,6 +43,14 @@ async function heraldPlayerlist_getListActor() {
     listActorUuid: listActorUuid,
   });
 
+  // for (let actor of heraldPlayerlist_listActorCanvas) {
+  //   const allUsers = game.users;
+  //   for (let user of allUsers) {
+  //     console.log(user.id);
+  //   }
+  //   console.log(allUsers);
+  //   console.log(actor);
+  // }
   heraldPlayerlist_createPlayerList();
 }
 
@@ -89,8 +97,10 @@ function heraldPlayerlist_renderlistPlayer() {
               <div class="heraldPlayerlist-tempbartop" data-actor-id="${actor.uuid}"></div>
               <div class="heraldPlayerlist-tempbarbottom" data-actor-id="${actor.uuid}"></div>
               <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-tempmaxhp" data-actor-id="${actor.uuid}"></div>
+              <div class="heraldPlayerlist-hpattributesvalue">
+                <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
+                <div class="heraldPlayerlist-tempmaxhp" data-actor-id="${actor.uuid}"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -114,14 +124,15 @@ function heraldPlayerlist_renderlistPlayer() {
   heraldPlayerlist_updateEffectActor();
 }
 
-function heraldPlayerlist_updateHpActor() {
+async function heraldPlayerlist_updateHpActor() {
   for (let actor of heraldPlayerlist_listActorCanvas) {
     const hp = actor.system.attributes.hp.value;
     const maxHp = actor.system.attributes.hp.max;
     const tempHp = actor.system.attributes.hp.temp || 0;
 
     const tempmaxhp = actor.system.attributes.hp.tempmax;
-    const hpPercent = (hp / (maxHp + tempmaxhp)) * 100;
+    const totalMaxHp = maxHp + tempmaxhp;
+    const hpPercent = (hp / totalMaxHp) * 100;
 
     let tempPercentage = (tempHp / maxHp) * 100;
     if (tempPercentage > 100) {
@@ -154,23 +165,51 @@ function heraldPlayerlist_updateHpActor() {
       `.heraldPlayerlist-armorclassvalue[data-actor-id="${actor.uuid}"]`
     );
     if (hpBar) {
-      hpBar.style.width = `${hpPercent}%`;
-      if (hpPercent < 0) {
-        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp0} 98%)`;
-      } else if (hpPercent <= 25) {
-        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp25} 98%)`;
-      } else if (hpPercent <= 50) {
-        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp50} 98%)`;
-      } else if (hpPercent <= 75) {
-        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp75} 98%)`;
+      if (hp > 0) {
+        hpBar.style.width = `${hpPercent}%`;
+        if (hpPercent < 0) {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp0} 98%)`;
+        } else if (hpPercent <= 25) {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp25} 98%)`;
+        } else if (hpPercent <= 50) {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp50} 98%)`;
+        } else if (hpPercent <= 75) {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp75} 98%)`;
+        } else {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp100} 98%)`;
+        }
+        if (hpvalue) {
+          hpvalue.innerText = hp + "/" + totalMaxHp;
+        }
       } else {
-        hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp100} 98%)`;
+        let temphpValue = hp;
+        let negativeBlockMax = hp + totalMaxHp;
+        if (negativeBlockMax < 0) {
+          temphpValue = totalMaxHp * -1;
+
+          await actor.update({
+            "system.attributes.hp.value": temphpValue,
+          });
+        }
+        const negativeHpPercent = (temphpValue / totalMaxHp) * -100;
+        hpBar.style.width = `${negativeHpPercent}%`;
+        if (negativeHpPercent < 0) {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp0} 98%)`;
+        } else if (negativeHpPercent <= 25) {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp25} 98%)`;
+        } else if (negativeHpPercent <= 50) {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp50} 98%)`;
+        } else if (negativeHpPercent <= 75) {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp75} 98%)`;
+        } else {
+          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp100} 98%)`;
+        }
+        if (hpvalue) {
+          hpvalue.innerText = temphpValue + "/" + totalMaxHp;
+        }
       }
     }
 
-    if (hpvalue) {
-      hpvalue.innerText = hp + "/" + (maxHp + tempmaxhp);
-    }
     if (tempMaxHpDiv) {
       if (tempmaxhp) {
         if (tempmaxhp > 0) {
@@ -192,7 +231,6 @@ function heraldPlayerlist_updateHpActor() {
         `;
       }
       if (tempPercentage < 10) {
-        console.log("cek");
         tempHpBarTop.style.width = `${tempPercentage + 8}%`;
         tempHpBarBottom.style.width = `${tempPercentage + 8}%`;
       }
