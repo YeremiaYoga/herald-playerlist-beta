@@ -1,12 +1,10 @@
 .heraldPlayerlist {
     position: fixed;
-    /* top: 25vh;
-    left: 15vw; */
     transform: translateX(-50%);
     z-index: 5;
     display: flex;
     flex-direction: column;
-    align-items: center;
+
     width: 190px;
 }
 
@@ -14,6 +12,8 @@
     display: flex;
 
 }
+
+
 
 
 .heraldPlayerlist-playerContainer {
@@ -48,20 +48,6 @@
     object-fit: cover;
 }
 
-/* .heraldPlayerlist-leftActor {
-    flex: 0 0 auto;
-    width: 40px;
-    height: 40px;
-    background-color: #f0f0f0;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid black;
-    
-    z-index: 5;
-} */
-
 
 
 .heraldPlayerlist-rightContainer {
@@ -80,62 +66,75 @@
 }
 
 .heraldPlayerlist-hpbarContainer {
-    position: absolute;
+    position: relative;
+
     margin-top: 25px;
-    left: 40px;
+    right: 11%;
     width: 150px;
     height: 16px;
-    background-color: rgb(46, 46, 46);
-    border: 2px solid transparent;
+    background-image: linear-gradient(90deg, #d4af37, #b8860b, #d4af37);
+
     border-radius: 5px;
-    box-sizing: border-box;
-    background-clip: padding-box;
-    border-image: linear-gradient(90deg,
-            #d4af37,
-            #b8860b,
-            #d4af37) 1;
+
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.heraldPlayerlist-hpbarBackground {
+    width: calc(100% - 4px);
+
+    height: calc(100% - 4px);
+
+    background-color: rgb(46, 46, 46);
+
+    border-radius: 3px;
+
+    position: absolute;
+
+    top: 2px;
+
+    left: 2px;
 
 }
 
 .heraldPlayerlist-hpbar {
-    width: 0;
+    width: 0%;
+
     height: 100%;
+
     background: linear-gradient(to right, black, #389454);
-    position: relative;
-    overflow: hidden;
+
+    position: absolute;
+
     transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
+
 }
 
 .heraldPlayerlist-hpattributesvalue {
     position: relative;
     display: flex;
     z-index: 10;
-    top: -55%;
-    left: 55%;
+    bottom: -50%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    align-items: center; 
+    align-items: center;
     justify-content: center;
 }
 
 
 .heraldPlayerlist-hpvalue {
-    /* position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); */
     font-size: 12px;
     color: white;
     pointer-events: none;
-   
+
 }
 
 .heraldPlayerlist-tempmaxhp {
-    /* position: absolute;
-    top: 50%;
-    left: 70%;
-    transform: translate(-50%, -50%); */
-    font-size: 11px;
+    font-size: 10px;
     font-weight: bold;
     pointer-events: none;
     padding-left: 2px;
@@ -192,7 +191,7 @@
 .heraldPlayerlist-armorclassvalue {
     position: absolute;
     font-size: 9px;
-    left: 6%;
+    left: 5%;
     transform: translate(-50%, -100%);
     color: white;
     z-index: 11;
@@ -205,8 +204,8 @@
 
 .heraldPlayerlist-tempshield {
     position: absolute;
-    left: 35px;
-    margin-top: -15px;
+    left: 11%;
+    margin-top: -14px;
     z-index: 6;
 }
 
@@ -216,25 +215,21 @@
 }
 
 
-
-/* .heraldPlayerlist-lowerbar {
-
-    display: flex;
-
-} */
-
 .heraldPlayerlist-listeffect {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(8, 18px);
     margin-top: 4px;
-    gap: 2px;
     margin-left: 2vw;
+
 }
 
 .heraldPlayerlist-playerEffect {
     border: 1px solid white;
     width: 15px;
     height: 15px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 
@@ -283,4 +278,37 @@
     padding: 0;
     bottom: 2px;
     right: 2px;
+}
+
+
+.heraldPlayerlist-collapseButton {
+    background-color: #007bff;
+    width: 25px;
+    height: 25px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease;
+}
+
+
+
+.heraldPlayerlist-collapsePlayerContainer {
+    flex: 0 0 auto;
+    width: 25px;
+    height: 25px;
+    background-color: #f0f0f0;
+    display: flex;
+    border: 2.5px solid #d4af37;
+    z-index: 5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.heraldPlayerlist-actorImageCollapse {
+    width: 20px;
+    height: 20px;
+    border: none;
+    object-fit: cover;
 }

@@ -7,11 +7,12 @@ let hp100 = "#389454";
 let hpgradient = "#302c2c";
 
 let heraldPlayerlist_showPlayerlist = true;
+
 Hooks.on("canvasReady", async () => {
   if (canvas.scene.active == true) {
-    await heraldPlayerlist_getListActor();
-
-    heraldPlayerlist_getSettingValue();
+    await heraldPlayerlist_toggleShowPlayerlist();
+    // heraldPlayerlist_getListActor();
+    // heraldPlayerlist_getSettingValue();
   } else {
     await canvas.scene.unsetFlag("world", "heraldPlayerlist");
 
@@ -52,6 +53,25 @@ async function heraldPlayerlist_getListActor() {
   //   console.log(actor);
   // }
   heraldPlayerlist_createPlayerList();
+  // heraldPlayerlist_renderCollapseButton();
+}
+let heraldPlayerlist_rendered = false;
+async function heraldPlayerlist_toggleShowPlayerlist() {
+  if (heraldPlayerlist_rendered) {
+    return;
+  }
+
+  if (heraldPlayerlist_showPlayerlist == true) {
+    heraldPlayerlist_rendered = true;
+    heraldPlayerlist_getListActor();
+    heraldPlayerlist_getSettingValue();
+  } else {
+    const existingBar = document.getElementById("heraldPlayerlist");
+    if (existingBar) {
+      heraldPlayerlist_rendered = false;
+      existingBar.remove();
+    }
+  }
 }
 
 function heraldPlayerlist_createPlayerList() {
@@ -59,24 +79,101 @@ function heraldPlayerlist_createPlayerList() {
   if (existingBar) {
     existingBar.remove();
   }
+
   fetch("/modules/herald-playerlist-beta/templates/herald-playerlist.html")
     .then((response) => response.text())
     .then((html) => {
       const div = document.createElement("div");
       div.innerHTML = html;
+      const playerlist = div.firstChild;
+      playerlist.id = "heraldPlayerlist";
 
-      div.firstChild.id = "heraldPlayerlist";
-
-      document.body.appendChild(div.firstChild);
-      if (heraldPlayerlist_showPlayerlist == true) {
-        heraldPlayerlist_renderlistPlayer();
-      }
+      heraldPlayerlist_createCollapseButton(playerlist);
+      heraldPlayerlist_createHtmlPlayerlist(playerlist);
+      document.body.appendChild(playerlist);
+      heraldPlayerlist_renderlistPlayer();
     })
     .catch((err) => {
       console.error("Gagal memuat template hpbar.html:", err);
     });
 }
 
+function heraldPlayerlist_createHtmlPlayerlist(playerlist) {
+  const containerDiv = document.createElement("div");
+  containerDiv.id = "heraldPlayerlist-container";
+  containerDiv.classList.add("heraldPlayerlist-container");
+
+  const listPlayerDiv = document.createElement("div");
+  listPlayerDiv.id = "heraldPlayerlist-listPlayer";
+  listPlayerDiv.classList.add("heraldPlayerlist-listPlayer");
+
+  containerDiv.appendChild(listPlayerDiv);
+  playerlist.appendChild(containerDiv);
+}
+function heraldPlayerlist_createCollapseButton(playerlist) {
+  const user = game.user;
+  let ownerActor = false;
+  for (let actor of heraldPlayerlist_listActorCanvas) {
+    if (actor.ownership[user.id]) {
+      if (actor.ownership[user.id] == 3) {
+        ownerActor = true;
+      }
+    }
+  }
+
+  if (ownerActor == false) {
+    return;
+  }
+
+  const collapseContainer = document.createElement("div");
+  collapseContainer.id = "heraldPlayerlist-collapseContainer";
+
+  const collapseButton = document.createElement("button");
+  collapseButton.id = "heraldPlayerlist-collapseButton";
+  collapseButton.classList.add("heraldPlayerlist-collapseButton");
+  collapseButton.textContent = "v";
+
+  collapseContainer.appendChild(collapseButton);
+  playerlist.appendChild(collapseContainer);
+
+  collapseButton.addEventListener("click", function () {
+    heraldPlayerlist_toggleCollapse();
+  });
+}
+
+let heraldPlayerlist_showCollapse = false;
+function heraldPlayerlist_toggleCollapse() {
+  const collapseButton = document.getElementById(
+    "heraldPlayerlist-collapseButton"
+  );
+  if (heraldPlayerlist_showCollapse) {
+    heraldPlayerlist_renderlistPlayer();
+    heraldPlayerlist_showCollapse = false;
+    collapseButton.style.marginBottom = "5px";
+    collapseButton.innerHTML = "v";
+  } else {
+    heraldPlayerlist_renderCollapselist();
+    heraldPlayerlist_showCollapse = true;
+    collapseButton.style.marginBottom = "0";
+    collapseButton.innerHTML = ">";
+  }
+}
+
+function heraldPlayerlist_renderCollapselist() {
+  let listPLayer = ``;
+  let divListPlayer = document.getElementById("heraldPlayerlist-listPlayer");
+  for (let actor of heraldPlayerlist_listActorCanvas) {
+    listPLayer += `
+    <div id="heraldPlayerlist-playerActor" class="heraldPlayerlist-playerActor">
+        <div id="heraldPlayerlist-playerContainer" class="heraldPlayerlist-playerContainer">
+          <div id="heraldPlayerlist-collapsePlayerContainer" class="heraldPlayerlist-collapsePlayerContainer">
+              <img src="${actor.img}" alt="Image" class="heraldPlayerlist-actorImageCollapse" />
+          </div>
+        </div>
+    </div>`;
+  }
+  divListPlayer.innerHTML = listPLayer;
+}
 function heraldPlayerlist_renderlistPlayer() {
   let listPLayer = ``;
   let divListPlayer = document.getElementById("heraldPlayerlist-listPlayer");
@@ -93,13 +190,15 @@ function heraldPlayerlist_renderlistPlayer() {
               ${actor.name}
             </div>
             <div id="heraldPlayerlist-hpbarContainer" class="heraldPlayerlist-hpbarContainer">
-              <div class="heraldPlayerlist-hpbar" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-tempbartop" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-tempbarbottom" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
-              <div class="heraldPlayerlist-hpattributesvalue">
-                <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
-                <div class="heraldPlayerlist-tempmaxhp" data-actor-id="${actor.uuid}"></div>
+              <div class="heraldPlayerlist-hpbarBackground" data-actor-id="${actor.uuid}">
+                <div class="heraldPlayerlist-hpbar" data-actor-id="${actor.uuid}"></div>
+                <div class="heraldPlayerlist-tempbartop" data-actor-id="${actor.uuid}"></div>
+                <div class="heraldPlayerlist-tempbarbottom" data-actor-id="${actor.uuid}"></div>
+                <div class="heraldPlayerlist-tempvalue" data-actor-id="${actor.uuid}"></div>
+                <div class="heraldPlayerlist-hpattributesvalue">
+                  <div class="heraldPlayerlist-hpvalue" data-actor-id="${actor.uuid}"></div>
+                  <div class="heraldPlayerlist-tempmaxhp" data-actor-id="${actor.uuid}"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -437,7 +536,8 @@ function heraldPlayerlist_universalSettingValue(nameSetting, value) {
   if (nameSetting == "toggleShow") {
     heraldPlayerlist_showPlayerlist = value;
 
-    heraldPlayerlist_createPlayerList();
+    heraldPlayerlist_toggleShowPlayerlist();
+    heraldPlayerlist_rendered = false;
   }
 
   if (nameSetting == "widthDistance") {
