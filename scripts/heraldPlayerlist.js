@@ -151,12 +151,67 @@ function heraldPlayerlist_toggleCollapse() {
     heraldPlayerlist_showCollapse = false;
     collapseButton.style.marginBottom = "5px";
     collapseButton.innerHTML = "v";
+    heraldPlayerlist_getSettingActor();
   } else {
     heraldPlayerlist_renderCollapselist();
     heraldPlayerlist_showCollapse = true;
     collapseButton.style.marginBottom = "0";
     collapseButton.innerHTML = ">";
   }
+}
+
+function heraldPlayerlist_getSettingActor() {
+  const fontSize = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_fontSize"
+  );
+  heraldPlayerlist_universalSettingValue("fontSize", fontSize);
+
+  const actorNameColor = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_actorNameColor"
+  );
+  heraldPlayerlist_colorSettingValue("actorNameColor", actorNameColor);
+
+  const tempHpColor = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_tempHpColor"
+  );
+  heraldPlayerlist_colorSettingValue("tempHpColor", tempHpColor);
+
+  const hpGradientColor = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hpGradientColor"
+  );
+  hpgradient = hpGradientColor;
+
+  const hp0Color = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp0Color"
+  );
+  hp0 = hp0Color;
+  const hp25Color = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp25Color"
+  );
+
+  hp25 = hp25Color;
+  const hp50Color = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp50Color"
+  );
+  hp50 = hp50Color;
+  const hp75Color = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp75Color"
+  );
+  hp75 = hp75Color;
+  const hp100Color = game.settings.get(
+    "herald-playerlist-beta",
+    "heraldplayerlist_hp100Color"
+  );
+  hp100 = hp100Color;
+  heraldPlayerlist_updateHpActor();
 }
 
 function heraldPlayerlist_renderCollapselist() {

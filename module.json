@@ -3,7 +3,7 @@
   "title": "Herald Player List Beta",
   "description": "Herald Beta Testing",
   "version": "1.0.0",
-  "author": "test",
+  "author": ["Herald of Memory", "CandleNote"],
   "manifest": "https://raw.githubusercontent.com/YeremiaYoga/herald-playerlist-beta/main/module.json",
   "download": "https://github.com/YeremiaYoga/herald-playerlist-beta/archive/refs/heads/main.zip",
   "esmodules": ["scripts/main.js"],
