@@ -418,17 +418,18 @@ async function heraldPlayerlist_updateHpActor() {
         }
         const negativeHpPercent = (temphpValue / totalMaxHp) * -100;
         hpBar.style.width = `${negativeHpPercent}%`;
-        if (negativeHpPercent < 0) {
+        if (negativeHpPercent > 0) {
           hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp0} 98%)`;
-        } else if (negativeHpPercent <= 25) {
-          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp25} 98%)`;
-        } else if (negativeHpPercent <= 50) {
-          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp50} 98%)`;
-        } else if (negativeHpPercent <= 75) {
-          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp75} 98%)`;
-        } else {
-          hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp100} 98%)`;
-        }
+        } 
+        // else if (negativeHpPercent <= 25) {
+        //   hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp25} 98%)`;
+        // } else if (negativeHpPercent <= 50) {
+        //   hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp50} 98%)`;
+        // } else if (negativeHpPercent <= 75) {
+        //   hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp75} 98%)`;
+        // } else {
+        //   hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp100} 98%)`;
+        // }
         if (hpvalue) {
           hpvalue.innerText = temphpValue + "/" + totalMaxHp;
         }
