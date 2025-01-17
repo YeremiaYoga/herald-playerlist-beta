@@ -2,13 +2,8 @@ import * as herald_playerlist from "./heraldPlayerlist.js";
 
 Hooks.on("ready", () => {
   setTimeout(() => {
-    // herald_playerlist.heraldPlayerlist_getListActor();
     herald_playerlist.heraldPlayerlist_universalChecker();
   }, 1000);
-  // setTimeout(() => {
-  //   herald_playerlist.heraldPlayerlist_getSettingValue();
-
-  // }, 1500);
 });
 
 Hooks.on("init", () => {
@@ -164,10 +159,7 @@ Hooks.on("init", () => {
       default: "#8B0000",
       category: "Color",
       onChange: (value) => {
-        herald_playerlist.heraldPlayerlist_colorSettingValue(
-          "hp0Color",
-          value
-        );
+        herald_playerlist.heraldPlayerlist_colorSettingValue("hp0Color", value);
       },
     }
   );

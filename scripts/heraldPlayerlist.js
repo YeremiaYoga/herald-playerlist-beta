@@ -11,8 +11,6 @@ let heraldPlayerlist_showPlayerlist = true;
 Hooks.on("canvasReady", async () => {
   if (canvas.scene.active == true) {
     await heraldPlayerlist_toggleShowPlayerlist();
-    // heraldPlayerlist_getListActor();
-    // heraldPlayerlist_getSettingValue();
   } else {
     await canvas.scene.unsetFlag("world", "heraldPlayerlist");
 
@@ -44,16 +42,7 @@ async function heraldPlayerlist_getListActor() {
     listActorUuid: listActorUuid,
   });
 
-  // for (let actor of heraldPlayerlist_listActorCanvas) {
-  //   const allUsers = game.users;
-  //   for (let user of allUsers) {
-  //     console.log(user.id);
-  //   }
-  //   console.log(allUsers);
-  //   console.log(actor);
-  // }
   heraldPlayerlist_createPlayerList();
-  // heraldPlayerlist_renderCollapseButton();
 }
 let heraldPlayerlist_rendered = false;
 async function heraldPlayerlist_toggleShowPlayerlist() {
@@ -233,12 +222,55 @@ function heraldPlayerlist_renderlistPlayer() {
   let listPLayer = ``;
   let divListPlayer = document.getElementById("heraldPlayerlist-listPlayer");
   const heraldPlayerlist = canvas.scene.getFlag("world", "heraldPlayerlist");
+
   for (let actor of heraldPlayerlist_listActorCanvas) {
+    let classActor = "";
+    for (let item of actor.items) {
+      if (item.type == "class") {
+        classActor = item.name;
+      }
+    }
+    const actorTooltip = `
+    <div class="heraldPlayerlist-actorTooltip" style="display: none;">
+        <h3>${actor.name}</h3>
+        <div class="heraldPlayerlist-characterStatus">
+          <div class="heraldPlayerlist-detailActorHp" data-actor-id="${
+            actor.uuid
+          }">HP: ${actor.system.attributes.hp.value || 0}</div>
+          <div class="heraldPlayerlist-detailActorAc" data-actor-id="${
+            actor.uuid
+          }"><i class="fas fa-shield-alt" style="margin-right: 3px;"></i> ${
+      actor.system.attributes.ac.value || 0
+    } AC</div>
+          <div class="heraldPlayerlist-detailActorWalkspeed" data-actor-id="${
+            actor.uuid
+          }"><i class="fas fa-shoe-prints" style="margin-right: 3px;"></i> ${
+      actor.system.attributes.movement.walk || 0
+    } ft.</div>
+          <div class="heraldPlayerlist-detailActorSpeedDc" data-actor-id="${
+            actor.uuid
+          }"><i class="fas fa-magic" style="margin-right: 3px;"></i> ${
+      actor.system.attributes.spelldc || 0
+    } Spell DC</div>
+        </div>
+        <div class="heraldPlayerlist-characterStatus2">
+          <div class="heraldPlayerlist-actorlevel">
+            <div>Level ${actor.system.details?.level || "Unknown"}</div>
+            <div> ${classActor || "Unknown"}</div>
+            <div> - </div>
+            <div> ${actor.system.details?.race || "Unknown"}</div>
+          </div>
+        </div>
+    </div>`;
+
     listPLayer += `
     <div id="heraldPlayerlist-playerActor" class="heraldPlayerlist-playerActor">
         <div id="heraldPlayerlist-playerContainer" class="heraldPlayerlist-playerContainer">
           <div id="heraldPlayerlist-leftContainer" class="heraldPlayerlist-leftContainer">
-              <img src="${actor.img}" alt="Image" class="heraldPlayerlist-actorImage" />
+              <div class="heraldPlayerlist-actorImageContainer">
+                  <img src="${actor.img}" alt="Image" class="heraldPlayerlist-actorImage" />
+                  ${actorTooltip}
+              </div>
           </div>
           <div id="heraldPlayerlist-rightContainer" class="heraldPlayerlist-rightContainer">
             <div id="heraldPlayerlist-tokenname" class="heraldPlayerlist-tokenname">
@@ -266,14 +298,27 @@ function heraldPlayerlist_renderlistPlayer() {
          <div class="heraldPlayerlist-tempshield" data-actor-id="${actor.uuid}"></div>
         <div id="heraldPlayerlist-listeffect" class="heraldPlayerlist-listeffect" data-actor-id="${actor.uuid}">
         </div>
-       
         </div>
       </div>
     </div>`;
   }
 
   divListPlayer.innerHTML = listPLayer;
+  document
+    .querySelectorAll(".heraldPlayerlist-actorImageContainer")
+    .forEach((container) => {
+      const tooltip = container.querySelector(".heraldPlayerlist-actorTooltip");
 
+      container.addEventListener("mouseenter", () => {
+        if (tooltip) tooltip.style.display = "block";
+      });
+
+      container.addEventListener("mouseleave", () => {
+        if (tooltip) tooltip.style.display = "none";
+      });
+    });
+
+  // Call update functions
   heraldPlayerlist_updateHpActor();
   heraldPlayerlist_updateEffectActor();
 }
@@ -318,6 +363,32 @@ async function heraldPlayerlist_updateHpActor() {
     const armorClassDiv = document.querySelector(
       `.heraldPlayerlist-armorclassvalue[data-actor-id="${actor.uuid}"]`
     );
+
+    //detail actor
+
+    const detailActorHpDiv = document.querySelector(
+      `.heraldPlayerlist-detailActorHp[data-actor-id="${actor.uuid}"]`
+    );
+    const detailActorAcDiv = document.querySelector(
+      `.heraldPlayerlist-detailActorAc[data-actor-id="${actor.uuid}"]`
+    );
+    const detailActorWalkspeedDiv = document.querySelector(
+      `.heraldPlayerlist-detailActorWalkspeed[data-actor-id="${actor.uuid}"]`
+    );
+    const detailActorSpeedDcDiv = document.querySelector(
+      `.heraldPlayerlist-detailActorSpeedDc[data-actor-id="${actor.uuid}"]`
+    );
+
+    if (detailActorHpDiv) {
+      let tempmaxhptext = "";
+      if (tempmaxhp > 0) {
+        tempmaxhptext = `+${tempmaxhp}`;
+      } else {
+        tempmaxhptext = `${tempmaxhp}`;
+      }
+
+      detailActorHpDiv.innerHTML = `<i class="fas fa-heart" style="margin-right: 3px;"></i>  ${hp}/${totalMaxHp} (${tempmaxhptext}) HP`;
+    }
     if (hpBar) {
       if (hp > 0) {
         hpBar.style.width = `${hpPercent}%`;
