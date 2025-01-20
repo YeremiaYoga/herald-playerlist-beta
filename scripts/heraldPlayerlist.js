@@ -224,12 +224,13 @@ function heraldPlayerlist_renderlistPlayer() {
   const heraldPlayerlist = canvas.scene.getFlag("world", "heraldPlayerlist");
 
   for (let actor of heraldPlayerlist_listActorCanvas) {
-    let classActor = "";
+    let arrClassActor = [];
     for (let item of actor.items) {
-      if (item.type == "class") {
-        classActor = item.name;
+      if (item.type === "class") {
+        arrClassActor.push(item.name); // Tambahkan nama kelas ke array
       }
     }
+    let classActorValue = arrClassActor.join("/");
     const actorTooltip = `
     <div class="heraldPlayerlist-actorTooltip" style="display: none;">
         <h3>${actor.name}</h3>
@@ -256,7 +257,7 @@ function heraldPlayerlist_renderlistPlayer() {
         <div class="heraldPlayerlist-characterStatus2">
           <div class="heraldPlayerlist-actorlevel">
             <div>Level ${actor.system.details?.level || "Unknown"}</div>
-            <div> ${classActor || "Unknown"}</div>
+            <div> ${classActorValue || "Unknown"}</div>
             <div> - </div>
             <div> ${actor.system.details?.race || "Unknown"}</div>
           </div>
@@ -317,10 +318,10 @@ function heraldPlayerlist_renderlistPlayer() {
         if (tooltip) tooltip.style.display = "none";
       });
     });
-
-  // Call update functions
-  heraldPlayerlist_updateHpActor();
-  heraldPlayerlist_updateEffectActor();
+  setTimeout(() => {
+    heraldPlayerlist_updateHpActor();
+    heraldPlayerlist_updateEffectActor();
+  }, 500);
 }
 
 async function heraldPlayerlist_updateHpActor() {
@@ -381,13 +382,16 @@ async function heraldPlayerlist_updateHpActor() {
 
     if (detailActorHpDiv) {
       let tempmaxhptext = "";
-      if (tempmaxhp > 0) {
-        tempmaxhptext = `+${tempmaxhp}`;
-      } else {
-        tempmaxhptext = `${tempmaxhp}`;
+      if(tempmaxhp){
+        if (tempmaxhp > 0) {
+          tempmaxhptext = `(+${tempmaxhp})`;
+        } else {
+          tempmaxhptext = `(${tempmaxhp})`;
+        }
       }
+   
 
-      detailActorHpDiv.innerHTML = `<i class="fas fa-heart" style="margin-right: 3px;"></i>  ${hp}/${totalMaxHp} (${tempmaxhptext}) HP`;
+      detailActorHpDiv.innerHTML = `<i class="fas fa-heart" style="margin-right: 3px;"></i>  ${hp}/${totalMaxHp} ${tempmaxhptext} HP`;
     }
     if (hpBar) {
       if (hp > 0) {
@@ -420,7 +424,7 @@ async function heraldPlayerlist_updateHpActor() {
         hpBar.style.width = `${negativeHpPercent}%`;
         if (negativeHpPercent > 0) {
           hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp0} 98%)`;
-        } 
+        }
         // else if (negativeHpPercent <= 25) {
         //   hpBar.style.background = `linear-gradient(to right, ${hpgradient} 2%, ${hp25} 98%)`;
         // } else if (negativeHpPercent <= 50) {
