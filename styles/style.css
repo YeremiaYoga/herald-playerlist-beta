@@ -369,6 +369,25 @@
 /* npc list */
 
 
+.heraldPlayerlist-collapseButtonNpc {
+    position: relative;
+    left: 100%;
+    background-color: #ffc400;
+    width: 25px;
+    height: 25px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+
+
 #heraldPlayerlist-npclist {
     display: flex;
     justify-content: space-evenly;
