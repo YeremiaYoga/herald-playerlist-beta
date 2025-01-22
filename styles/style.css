@@ -1,5 +1,7 @@
 .heraldPlayerlist {
     position: fixed;
+    top: 20vh;
+    left: -100vw;
     transform: translateX(-50%);
     z-index: 5;
     display: flex;
@@ -24,6 +26,7 @@
     width: 100%;
     display: flex;
     margin-bottom: 5px;
+    gap: 8px; 
 }
 
 .heraldPlayerlist-leftContainer {
@@ -370,7 +373,6 @@
     display: flex;
     justify-content: space-evenly;
     align-items: flex-start;
-
     left: 10%;
     gap: 20px;
 
@@ -422,21 +424,6 @@
 
 }
 
-.heraldPlayerlist-npcbarborder {
-    position: absolute;
-    top: 20%;
-    left: 55%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 40px;
-}
-
-.heraldPlayerlist_npchpborder {
-    fill: none;
-    stroke: #d4af37;
-    stroke-width: 12;
-
-}
 
 .heraldPlayerlist-npchpbackground {
     fill: none;
@@ -458,6 +445,8 @@
     top: 160%;
     right: 40%;
     font-size: 9px;
+    color: white;
+    font-weight: bold;
 
 }
 

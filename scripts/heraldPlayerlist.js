@@ -21,7 +21,6 @@ Hooks.on("canvasReady", async () => {
     }
   }
 });
-
 async function heraldPlayerlist_getListActor() {
   let listActorUuid = [];
 
@@ -364,15 +363,10 @@ function heraldPlayerlist_renderNpclist() {
     }
   }
 
-  for (let actor of heraldPlayerlist_listNpcCanvas) {
-    console.log(actor.ownership);
-  }
+  // for (let actor of heraldPlayerlist_listNpcCanvas) {
+  //   console.log(actor.ownership);
+  // }
   for (let actor of heraldPlayerlist_listActorCanvas) {
-    //   <div id="heraldPlayerlist-npcbarborder" class="heraldPlayerlist-npcbarborder">
-    //   <svg width="60" height="60" viewBox="0 0 100 100" class="heraldPlayerlist_npchpcontainer">
-    //     <circle cx="50" cy="50" r="45" id="heraldPlayerlist_npchpborder" class="heraldPlayerlist_npchpborder" stroke-dasharray="300" stroke-dashoffset="220" />
-    //   </svg>
-    // </div>
     const npclistDiv = document.querySelector(
       `.heraldPlayerlist-npclist[data-actor-id="${actor.uuid}"]`
     );
@@ -437,8 +431,6 @@ function heraldPlayerlist_updateDetailNpc() {
       );
 
       if (npcHpBarCircle) {
-        console.log(hpPercent);
-
         let npchpvaluebar = 0;
 
         npchpvaluebar = 300 - hpPercent;
@@ -802,13 +794,13 @@ Hooks.on("updateActor", async (actor, data) => {
 });
 
 Hooks.on("createToken", async () => {
-  heraldPlayerlist_getListActor();
+  await heraldPlayerlist_getListActor();
   heraldPlayerlist_getListNpc();
   heraldPlayerlist_getSettingValue();
 });
 
 Hooks.on("deleteToken", async () => {
-  heraldPlayerlist_getListActor();
+  await heraldPlayerlist_getListActor();
   heraldPlayerlist_getListNpc();
   heraldPlayerlist_getSettingValue();
 });
@@ -968,7 +960,6 @@ function heraldPlayerlist_getSettingValue() {
 }
 
 export {
-  heraldPlayerlist_getListActor,
   heraldPlayerlist_universalChecker,
   heraldPlayerlist_getSettingValue,
   heraldPlayerlist_universalSettingValue,
