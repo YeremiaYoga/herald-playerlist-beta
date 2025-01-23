@@ -26,10 +26,15 @@
     width: 100%;
     display: flex;
     margin-bottom: 5px;
-    gap: 8px; 
+    gap: 8px;
 }
 
 .heraldPlayerlist-leftContainer {
+    z-index: 10;
+}
+
+.heraldPlayerlist-actorImageContainer {
+    position: relative;
     flex: 0 0 auto;
     width: 41px;
     height: 41px;
@@ -39,15 +44,15 @@
     align-items: center;
     border: 2.5px solid #d4af37;
     border-radius: 50%;
-    z-index: 5;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 .heraldPlayerlist-actorImage {
-    width: 35px;
-    height: 35px;
+    width: 100%;
+    height: 100%;
     border: none;
     object-fit: cover;
+    object-position: center;
 }
 
 
@@ -213,7 +218,7 @@
     position: absolute;
     left: 11%;
     margin-top: -14px;
-    z-index: 6;
+    z-index: 11;
 }
 
 .heraldPlayerlist-imgtempshield {
@@ -338,9 +343,7 @@
     height: 180px;
 }
 
-.heraldPlayerlist-actorImageContainer {
-    position: relative;
-}
+
 
 
 .heraldPlayerlist-characterStatus>div {
@@ -371,7 +374,7 @@
 
 .heraldPlayerlist-collapseButtonNpc {
     position: relative;
-    left: 100%;
+    left: 5%;
     background-color: #ffc400;
     width: 25px;
     height: 25px;
@@ -387,6 +390,28 @@
     -o-border-radius: 3px;
 }
 
+.heraldPlayerlist-npcButtonCollapseActor{
+    position: absolute;
+    right: 0;
+}
+
+.heraldPlayerlist-collapseNpclistButton {
+    font-size: 10px;
+    width: 15px;
+    height: 15px;
+    background-color: rgb(27, 245, 46);
+    color: white;
+    border: none;
+    border-radius: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-border-radius: 20%;
+    -moz-border-radius: 20%;
+    -ms-border-radius: 20%;
+    -o-border-radius: 20%;
+}
 
 #heraldPlayerlist-npclist {
     display: flex;
@@ -417,8 +442,6 @@
 }
 
 .heraldPlayerlist-npcimageview {
-    /* width: 35px;
-    height: 35px; */
     border: none;
     object-fit: cover;
 }
@@ -431,7 +454,7 @@
     transform: translateX(-50%);
     width: 40px;
     height: 40px;
-    z-index: 10;
+    z-index: 9;
 }
 
 .heraldPlayerlist-npchpcontainer {
