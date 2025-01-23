@@ -492,10 +492,6 @@ function heraldPlayerlist_renderNpclistSingleActor(actor) {
 }
 
 function heraldPlayerlist_renderCollapseNpclist() {
-  const playerList = game.users.filter(
-    (user) => user.role === CONST.USER_ROLES.PLAYER
-  );
-
   for (let actor of heraldPlayerlist_listActorCanvas) {
     const npclistDiv = document.querySelector(
       `.heraldPlayerlist-npclist[data-actor-id="${actor.uuid}"]`
