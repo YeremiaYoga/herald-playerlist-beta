@@ -187,7 +187,6 @@
 
 .heraldPlayerlist-armorclass {
     position: relative;
-    /* Ensure parent container is relative */
     z-index: 10;
 }
 
@@ -336,11 +335,11 @@
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    z-index: 99;
+    z-index: 13;
     white-space: nowrap;
     transform: translateX(10px);
-    width: 300px;
-    height: 180px;
+    width: 400px;
+    height: 250px;
 }
 
 
@@ -390,7 +389,7 @@
     -o-border-radius: 3px;
 }
 
-.heraldPlayerlist-npcButtonCollapseActor{
+.heraldPlayerlist-npcButtonCollapseActor {
     position: absolute;
     right: 0;
 }
@@ -418,7 +417,7 @@
     justify-content: space-evenly;
     align-items: flex-start;
     left: 10%;
-    gap: 20px;
+    gap: 25px;
 
 }
 
@@ -446,11 +445,39 @@
     object-fit: cover;
 }
 
-
 .heraldPlayerlist-npcbar {
     position: absolute;
     top: 20%;
-    left: 75%;
+    left: 70%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    z-index: 9;
+}
+
+.heraldPlayerlist-npcBarBorderContainer{
+    z-index: 9;
+}
+
+.heraldPlayerlist-npcBarBorderTop {
+    position: absolute;
+    top: 13%;
+    left: 61%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    z-index: 11;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    z-index: 9;
+}
+
+.heraldPlayerlist-npcBarBorderBottom {
+    position: absolute;
+    top: 31%;
+    left: 79%;
     transform: translateX(-50%);
     width: 40px;
     height: 40px;
@@ -482,9 +509,60 @@
 }
 
 
+.heraldPlayerlist-npcBorderTop {
+    fill: none;
+    stroke: rgb(26, 209, 255);
+    stroke-width: 2;
+    pointer-events: none;
+    stroke-linecap: round;
+    z-index: 9;
+}
+
+
+
+.heraldPlayerlist-npcBorderBottom {
+    fill: none;
+    stroke: rgb(26, 209, 255);
+    stroke-width: 2;
+    pointer-events: none;
+    stroke-linecap: round;
+    z-index: 9;
+}
+
+
+.heraldPlayerlist-npcACContainer {
+    z-index: 10;
+}
+
+.heraldPlayerlist-npcACImage {
+    position: absolute;
+    left: 120%;
+    bottom: -25%;
+    width: 20px;
+    height: 20px;
+    border: none;
+    z-index: 8;
+}
+
+.heraldPlayerlist-npcACValue {
+    position: absolute;
+    font-size: 9px;
+    left: 149%;
+    bottom: -41%;
+    transform: translate(-50%, -100%);
+    color: white;
+    z-index: 9;
+    -webkit-transform: translate(-50%, -100%);
+    -moz-transform: translate(-50%, -100%);
+    -ms-transform: translate(-50%, -100%);
+    -o-transform: translate(-50%, -100%);
+}
+
+
+
 .heraldPlayerlist-npchpvalue {
     position: absolute;
-    top: 160%;
+    top: 165%;
     right: 40%;
     font-size: 9px;
     color: white;
