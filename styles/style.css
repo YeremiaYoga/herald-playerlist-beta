@@ -33,6 +33,10 @@
     z-index: 10;
 }
 
+.heraldPlayerlist-listPlayer {
+    width: 0;
+}
+
 .heraldPlayerlist-actorImageContainer {
     position: relative;
     flex: 0 0 auto;
@@ -258,14 +262,22 @@
 }
 
 
-.heraldPlayerlist-detaileffecttop {
+.heraldPlayerlist-detaileffectbot {
     display: flex;
+    gap: 5px;
 }
 
 .heraldPlayerlist-detaileffectduration {
     padding: 4px;
     display: inline-block;
     background-color: rgba(255, 51, 0, 0.5);
+    border-radius: 4px;
+}
+
+.heraldplayerlist-detaileffectdisable {
+    padding: 4px;
+    display: inline-block;
+    background-color: rgb(179, 0, 0);
     border-radius: 4px;
 }
 
@@ -338,8 +350,8 @@
     z-index: 13;
     white-space: nowrap;
     transform: translateX(10px);
-    width: 400px;
-    height: 250px;
+    width: 275px;
+    height: 175px;
 }
 
 
@@ -369,6 +381,9 @@
 
 
 /* npc list */
+
+
+.heraldPlayerlist-npcContainer {}
 
 
 .heraldPlayerlist-collapseButtonNpc {
@@ -428,21 +443,47 @@
     align-items: center;
 }
 
-.heraldPlayerlist-npcimagecontainer {
+.heraldPlayerlist-npcWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.heraldPlayerlist-npcImageContainer {
     position: relative;
     left: 50%;
     top: 15px;
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    overflow: hidden;
     background-color: #363636;
-    border: 2px solid rgb(224, 224, 224);
+    border: 2px solid #d4af37;
+    z-index: 8;
 }
 
 .heraldPlayerlist-npcimageview {
+    width: 100%;
+    height: 100%;
     border: none;
     object-fit: cover;
+    object-position: center;
+    z-index: 8;
+}
+
+.heraldPlayerlist-npcTooltip {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 15;
+    white-space: nowrap;
+    transform: translateX(10px);
+    width: 275px;
+    height: 175px;
 }
 
 .heraldPlayerlist-npcbar {
@@ -452,11 +493,11 @@
     transform: translateX(-50%);
     width: 40px;
     height: 40px;
-    z-index: 9;
+    z-index: 6;
 }
 
-.heraldPlayerlist-npcBarBorderContainer{
-    z-index: 9;
+.heraldPlayerlist-npcBarBorderContainer {
+    z-index: 6;
 }
 
 .heraldPlayerlist-npcBarBorderTop {
@@ -471,7 +512,7 @@
     -moz-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
     -o-transform: translateX(-50%);
-    z-index: 9;
+    z-index: 6;
 }
 
 .heraldPlayerlist-npcBarBorderBottom {
@@ -481,7 +522,7 @@
     transform: translateX(-50%);
     width: 40px;
     height: 40px;
-    z-index: 9;
+    z-index: 6;
 }
 
 .heraldPlayerlist-npchpcontainer {
@@ -490,7 +531,7 @@
     -moz-transform: rotate(110deg);
     -ms-transform: rotate(110deg);
     -o-transform: rotate(110deg);
-
+    z-index: 6;
 }
 
 
@@ -515,7 +556,7 @@
     stroke-width: 2;
     pointer-events: none;
     stroke-linecap: round;
-    z-index: 9;
+    z-index: 6;
 }
 
 
@@ -526,7 +567,7 @@
     stroke-width: 2;
     pointer-events: none;
     stroke-linecap: round;
-    z-index: 9;
+    z-index: 6;
 }
 
 
@@ -583,7 +624,7 @@
     position: absolute;
     top: 130%;
     left: 75%;
-    z-index: 6;
+    z-index: 9;
     width: 15px;
 }
 
@@ -591,4 +632,28 @@
 .heraldPlayerlist-npcimgtempshield {
     width: 15px;
     border: none;
+}
+
+
+
+.heraldPlayerlist-npcStatus>div {
+    margin-bottom: 4px;
+}
+
+.heraldPlayerlist-npcStatus2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+
+    padding: 10px;
+    color: white;
+}
+
+.heraldPlayerlist-npcLevel {
+    display: flex;
+}
+
+.heraldPlayerlist-npcLevel>div {
+    margin-right: 2px;
 }
