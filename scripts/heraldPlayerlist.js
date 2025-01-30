@@ -1333,7 +1333,6 @@ async function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
 
   heraldPlayerlist_dialogDeleteEffect = true;
 
-  // Determine if the effect is currently disabled
   const isDisabled = effectToDelete.disabled;
 
   const dialog = new Dialog({
