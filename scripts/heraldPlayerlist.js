@@ -1333,18 +1333,22 @@ async function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
 
   heraldPlayerlist_dialogDeleteEffect = true;
 
+  // Determine if the effect is currently disabled
+  const isDisabled = effectToDelete.disabled;
+
   const dialog = new Dialog({
     title: "Manage Effect",
     content: `
       <p>What would you like to do with the effect <b>${effectToDelete.name}</b> on actor <b>${actor.name}</b>?</p>
     `,
     buttons: {
-      disable: {
-        label: "Disable",
+      disableEnable: {
+        label: isDisabled ? "Enable" : "Disable",
         callback: () => {
-          effectToDelete.update({ disabled: true });
+          effectToDelete.update({ disabled: !isDisabled });
+          const action = isDisabled ? "enabled" : "disabled";
           ui.notifications.info(
-            `Effect "${effectToDelete.name}" has been disabled.`
+            `Effect "${effectToDelete.name}" has been ${action}.`
           );
           heraldPlayerlist_updateEffectActor();
           heraldPlayerlist_dialogDeleteEffect = false;
@@ -1364,7 +1368,6 @@ async function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
       cancel: {
         label: "Cancel",
         callback: () => {
-
           heraldPlayerlist_dialogDeleteEffect = false;
         },
       },
@@ -1378,6 +1381,7 @@ async function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
 
   dialog.render(true);
 }
+
 
 function heraldPlayerlist_universalChecker() {
   setInterval(() => {
