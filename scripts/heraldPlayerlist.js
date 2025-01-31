@@ -821,7 +821,7 @@ async function heraldPlayerlist_updateDetailNpc() {
       if (npc.system.attributes.movement.climb) {
         movementClimbValue = `
         <div>
-           <i class="fa-sharp fa-solid fa-hand-back-fist" style="margin-right: 5px;"></i> ${
+          <i class="fa-solid fa-hill-rockslide" style="margin-right: 5px;"></i> ${
              npc.system.attributes.movement.climb || 0
            } ${movementUnits}.
         </div>`;
@@ -830,7 +830,7 @@ async function heraldPlayerlist_updateDetailNpc() {
         if (movementHover) {
           movementFlyValue = `
           <div>
-             <i class="fa-brands fa-fly" style="margin-right: 5px;"></i> ${
+             <i class="fa-solid fa-dove" style="margin-right: 5px;"></i> ${
                npc.system.attributes.movement.fly || 0
              } ${movementUnits}. (Hover)
           </div>`;
@@ -967,7 +967,7 @@ async function heraldPlayerlist_updateHpActor() {
     if (actor.system.attributes.movement.climb) {
       movementClimbValue = `
       <div>
-         <i class="fa-sharp fa-solid fa-hand-back-fist" style="margin-right: 5px;"></i> ${
+        <i class="fa-solid fa-hill-rockslide" style="margin-right: 5px;"></i> ${
            actor.system.attributes.movement.climb || 0
          } ${movementUnits}.
       </div>`;
@@ -976,7 +976,7 @@ async function heraldPlayerlist_updateHpActor() {
       if (movementHover) {
         movementFlyValue = `
         <div>
-           <i class="fa-brands fa-fly" style="margin-right: 5px;"></i> ${
+           <i class="fa-solid fa-dove" style="margin-right: 5px;"></i> ${
              actor.system.attributes.movement.fly || 0
            } ${movementUnits}. (Hover)
         </div>`;
