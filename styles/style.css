@@ -314,6 +314,7 @@
     border-radius: 3px;
     margin-bottom: 5px;
     transition: background-color 0.3s ease;
+    z-index: 15;
 }
 
 
@@ -402,6 +403,7 @@
     -moz-border-radius: 3px;
     -ms-border-radius: 3px;
     -o-border-radius: 3px;
+    z-index: 15;
 }
 
 .heraldPlayerlist-npcButtonCollapseActor {

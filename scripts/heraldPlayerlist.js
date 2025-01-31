@@ -474,8 +474,8 @@ function heraldPlayerlist_renderNpclistSingleActor(actor) {
                 <div class="heraldPlayerlist-npcLevel">
                   <div>CR ${npc.system.details?.cr || "Unknown"}</div>
                   <div> - </div>
-                  <div> ${npc.system.details?.type.value || "Unknown"}</div>
-                  <div> ${npc.system.details?.type.subtype || ""}</div>
+                  <div> ${npc.system.details?.type.value ? npc.system.details.type.value.charAt(0).toUpperCase() + npc.system.details.type.value.slice(1) : "Unknown"}</div>
+                   <div> ${npc.system.details?.type?.subtype ? `(${npc.system.details.type.subtype})` : ""} </div>
                 </div>
               </div>
           </div>`;
@@ -596,7 +596,7 @@ async function heraldPlayerlist_renderNpclist() {
                   <div class="heraldPlayerlist-npcLevel">
                     <div>CR ${npc.system.details?.cr || "Unknown"}</div>
                     <div> - </div>
-                    <div> ${npc.system.details?.type.value || "Unknown"}</div>
+                    <div> ${npc.system.details?.type.value ? npc.system.details.type.value.charAt(0).toUpperCase() + npc.system.details.type.value.slice(1) : "Unknown"}</div>
                     <div> ${npc.system.details?.type?.subtype ? `(${npc.system.details.type.subtype})` : ""} </div>
                   </div>
                 </div>
