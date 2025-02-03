@@ -305,16 +305,21 @@
 
 
 .heraldPlayerlist-collapseButton {
-    background-color: #007bff;
-    width: 25px;
-    height: 25px;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 30px;
+    height: 30px;
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 5px;
     margin-bottom: 5px;
     transition: background-color 0.3s ease;
     z-index: 15;
+    justify-items: center;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
 }
 
 
@@ -358,8 +363,18 @@
 
 
 
-.heraldPlayerlist-characterStatus>div {
-    margin-bottom: 4px;
+.heraldPlayerlist-characterStatus {
+
+    display: flex;
+    gap: 15px;
+}
+
+.heraldPlayerlist-status1 {
+    gap: 5px;
+}
+
+.heraldPlayerlist-status2 {
+    gap: 5px;
 }
 
 .heraldPlayerlist-characterStatus2 {
@@ -377,6 +392,7 @@
 .heraldPlayerlist-actorlevel>div {
     margin-right: 2px;
 }
+
 .heraldPlayerlist-detailActorMovement>div {
     margin-bottom: 4px;
 }
@@ -384,26 +400,23 @@
 /* npc list */
 
 
-.heraldPlayerlist-npcContainer {}
+
 
 
 .heraldPlayerlist-collapseButtonNpc {
     position: relative;
     left: 5%;
-    background-color: #ffc400;
-    width: 25px;
-    height: 25px;
+    background-color: rgba(0, 0, 0, 0.5); 
+    width: 30px;
+    height: 30px;
     color: white;
-    border: none;
     cursor: pointer;
-    border-radius: 3px;
+    border: none;
+    border-radius: 5px;
     margin-bottom: 5px;
-    transition: background-color 0.3s ease;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -ms-border-radius: 3px;
-    -o-border-radius: 3px;
+    transition: background-color 0.3s ease, color 0.3s ease;
     z-index: 15;
+    justify-items: center;
 }
 
 .heraldPlayerlist-npcButtonCollapseActor {
@@ -415,7 +428,7 @@
     font-size: 10px;
     width: 15px;
     height: 15px;
-    background-color: rgb(27, 245, 46);
+    background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
     border-radius: 20%;
@@ -663,4 +676,3 @@
 .heraldPlayerlist-detailNpcMovement>div {
     margin-bottom: 4px;
 }
-

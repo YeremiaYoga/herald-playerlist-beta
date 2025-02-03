@@ -142,12 +142,12 @@ function heraldPlayerlist_createCollapseActor(playerlist) {
   const collapseButton = document.createElement("button");
   collapseButton.id = "heraldPlayerlist-collapseButton";
   collapseButton.classList.add("heraldPlayerlist-collapseButton");
-  collapseButton.textContent = "v";
+  collapseButton.innerHTML = '<i class="fa-solid fa-sort" style="margin-left:2px;"></i>';
 
   const collapseButtonNpc = document.createElement("button");
   collapseButtonNpc.id = "heraldPlayerlist-collapseButtonNpc";
   collapseButtonNpc.classList.add("heraldPlayerlist-collapseButtonNpc");
-  collapseButtonNpc.textContent = "O";
+  collapseButtonNpc.innerHTML = '<i class="fa-solid fa-users-viewfinder" style=""></i>';
 
   collapseContainer.appendChild(collapseButton);
   collapseContainer.appendChild(collapseButtonNpc);
@@ -171,13 +171,11 @@ async function heraldPlayerlist_toggleCollapseNpc() {
     await heraldPlayerlist_renderNpclist();
     heraldPlayerlist_showCollapseNpc = false;
     collapseButtonNpc.style.left = "5%";
-    collapseButtonNpc.innerHTML = "O";
     heraldPlayerlist_renderButtonCollapseNpc();
   } else {
     heraldPlayerlist_renderCollapseNpclist();
     heraldPlayerlist_showCollapseNpc = true;
     collapseButtonNpc.style.left = "5%";
-    collapseButtonNpc.innerHTML = "O";
   }
 }
 
@@ -191,13 +189,13 @@ function heraldPlayerlist_toggleCollapse() {
     heraldPlayerlist_renderlistPlayer();
     heraldPlayerlist_showCollapse = false;
     collapseButton.style.marginBottom = "5px";
-    collapseButton.innerHTML = "v";
+
     heraldPlayerlist_getSettingActor();
   } else {
     heraldPlayerlist_renderCollapselist();
     heraldPlayerlist_showCollapse = true;
     collapseButton.style.marginBottom = "0";
-    collapseButton.innerHTML = ">";
+ 
   }
 }
 
@@ -292,18 +290,31 @@ function heraldPlayerlist_renderlistPlayer() {
     }" style="display: none;">
         <h3>${actor.name}</h3>
         <div class="heraldPlayerlist-characterStatus">
-          <div class="heraldPlayerlist-detailActorHp" data-actor-id="${
-            actor.uuid
-          }"></div>
-          <div class="heraldPlayerlist-detailActorAc" data-actor-id="${
-            actor.uuid
-          }"></div>
-          <div class="heraldPlayerlist-detailActorMovement" data-actor-id="${
-            actor.uuid
-          }"></div>
-          <div class="heraldPlayerlist-detailActorSpeedDc" data-actor-id="${
-            actor.uuid
-          }"></div>
+          <div class="heraldPlayerlist-status1">
+              <div class="heraldPlayerlist-detailActorHp" data-actor-id="${
+                actor.uuid
+              }"></div>
+            <div class="heraldPlayerlist-detailActorAc" data-actor-id="${
+              actor.uuid
+            }"></div>
+            <div class="heraldPlayerlist-detailActorMovement" data-actor-id="${
+              actor.uuid
+            }"></div>
+            <div class="heraldPlayerlist-detailActorSpeedDc" data-actor-id="${
+              actor.uuid
+            }"></div>
+          </div>
+          <div class="heraldPlayerlist-status2">
+            <div class="heraldPlayerlist-detailActorPrc" data-actor-id="${
+              actor.uuid
+            }">12</div>
+            <div class="heraldPlayerlist-detailActorInv" data-actor-id="${
+              actor.uuid
+            }">3</div>
+            <div class="heraldPlayerlist-detailActorIns" data-actor-id="${
+              actor.uuid
+            }">4</div>
+          </div>
         </div>
         <div class="heraldPlayerlist-characterStatus2">
           <div class="heraldPlayerlist-actorlevel">
@@ -418,7 +429,7 @@ function heraldPlayerlist_renderButtonCollapseNpc() {
         collapseNpclistButton.classList.add(
           "heraldPlayerlist-collapseNpclistButton"
         );
-        collapseNpclistButton.textContent = "X";
+        collapseNpclistButton.innerHTML = `<i class="fa-solid fa-xmark" style="margin-left:2px;"></i>`;
 
         collapseNpclistButton.addEventListener("click", () => {
           heraldPlayerlist_collapseNpclistActor(actor);
@@ -1030,7 +1041,7 @@ async function heraldPlayerlist_updateHpActor() {
       `.heraldPlayerlist-actorTooltip[data-actor-id="${actor.uuid}"]`
     );
 
-    let actorTooltipWidth = 275;
+    let actorTooltipWidth = 300;
     let actorTooltipheight = 175;
     let widthIncrementTooltip = 10;
     let heightIncrementTooltip = 15;
@@ -1087,6 +1098,37 @@ async function heraldPlayerlist_updateHpActor() {
       detailActorSpeedDcDiv.innerHTML = `<i class="fas fa-magic" style="margin-right: 5px;"></i> ${
         speedDcValue || 0
       } Spell Save DC`;
+    }
+
+    const detailActorPerceptionDiv = document.querySelector(
+      `.heraldPlayerlist-detailActorPrc[data-actor-id="${actor.uuid}"]`
+    );
+
+    const detailActorInvestigationDiv = document.querySelector(
+      `.heraldPlayerlist-detailActorInv[data-actor-id="${actor.uuid}"]`
+    );
+
+    const detailActorInsightDiv = document.querySelector(
+      `.heraldPlayerlist-detailActorIns[data-actor-id="${actor.uuid}"]`
+    );
+    let perceptionValue = actor.system.skills.prc.total;
+    let investigationValue = actor.system.skills.inv.total;
+    let insightValue = actor.system.skills.ins.total;
+    if (detailActorPerceptionDiv) {
+      detailActorPerceptionDiv.innerHTML = `<i class="fa-solid fa-eye" style="margin-right: 5px;"></i> ${
+        perceptionValue || 0
+      }`;
+    }
+    if (detailActorInvestigationDiv) {
+      detailActorInvestigationDiv.innerHTML = `<i class="fa-solid fa-magnifying-glass" style="margin-right: 5px;"></i> ${
+        investigationValue || 0
+      }`;
+    }
+
+    if (detailActorInsightDiv) {
+      detailActorInsightDiv.innerHTML = `<i class="fa-solid fa-brain" style="margin-right: 5px;"></i> ${
+        insightValue || 0
+      } `;
     }
 
     if (detailActorHpDiv) {
