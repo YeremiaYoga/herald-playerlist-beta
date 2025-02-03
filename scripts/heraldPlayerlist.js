@@ -1111,9 +1111,10 @@ async function heraldPlayerlist_updateHpActor() {
     const detailActorInsightDiv = document.querySelector(
       `.heraldPlayerlist-detailActorIns[data-actor-id="${actor.uuid}"]`
     );
-    let perceptionValue = actor.system.skills.prc.total;
-    let investigationValue = actor.system.skills.inv.total;
-    let insightValue = actor.system.skills.ins.total;
+
+    let perceptionValue = actor.system.skills.prc.passive;
+    let investigationValue = actor.system.skills.inv.passive;
+    let insightValue = actor.system.skills.ins.passive;
     if (detailActorPerceptionDiv) {
       detailActorPerceptionDiv.innerHTML = `<i class="fa-solid fa-eye" style="margin-right: 5px;"></i> ${
         perceptionValue || 0
