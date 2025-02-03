@@ -474,8 +474,17 @@ function heraldPlayerlist_renderNpclistSingleActor(actor) {
                 <div class="heraldPlayerlist-npcLevel">
                   <div>CR ${npc.system.details?.cr || "Unknown"}</div>
                   <div> - </div>
-                  <div> ${npc.system.details?.type.value ? npc.system.details.type.value.charAt(0).toUpperCase() + npc.system.details.type.value.slice(1) : "Unknown"}</div>
-                   <div> ${npc.system.details?.type?.subtype ? `(${npc.system.details.type.subtype})` : ""} </div>
+                  <div> ${
+                    npc.system.details?.type.value
+                      ? npc.system.details.type.value.charAt(0).toUpperCase() +
+                        npc.system.details.type.value.slice(1)
+                      : "Unknown"
+                  }</div>
+                   <div> ${
+                     npc.system.details?.type?.subtype
+                       ? `(${npc.system.details.type.subtype})`
+                       : ""
+                   } </div>
                 </div>
               </div>
           </div>`;
@@ -596,8 +605,19 @@ async function heraldPlayerlist_renderNpclist() {
                   <div class="heraldPlayerlist-npcLevel">
                     <div>CR ${npc.system.details?.cr || "Unknown"}</div>
                     <div> - </div>
-                    <div> ${npc.system.details?.type.value ? npc.system.details.type.value.charAt(0).toUpperCase() + npc.system.details.type.value.slice(1) : "Unknown"}</div>
-                    <div> ${npc.system.details?.type?.subtype ? `(${npc.system.details.type.subtype})` : ""} </div>
+                    <div> ${
+                      npc.system.details?.type.value
+                        ? npc.system.details.type.value
+                            .charAt(0)
+                            .toUpperCase() +
+                          npc.system.details.type.value.slice(1)
+                        : "Unknown"
+                    }</div>
+                    <div> ${
+                      npc.system.details?.type?.subtype
+                        ? `(${npc.system.details.type.subtype})`
+                        : ""
+                    } </div>
                   </div>
                 </div>
             </div>`;
@@ -661,9 +681,6 @@ async function heraldPlayerlist_renderNpclist() {
     await heraldPlayerlist_updateDetailNpc();
   }, 500);
 }
-
-
-
 
 async function heraldPlayerlist_updateDetailNpc() {
   for (let actor of heraldPlayerlist_listActorCanvas) {
@@ -822,8 +839,8 @@ async function heraldPlayerlist_updateDetailNpc() {
         movementClimbValue = `
         <div>
           <i class="fa-solid fa-hill-rockslide" style="margin-right: 5px;"></i> ${
-             npc.system.attributes.movement.climb || 0
-           } ${movementUnits}.
+            npc.system.attributes.movement.climb || 0
+          } ${movementUnits}.
         </div>`;
       }
       if (npc.system.attributes.movement.fly) {
@@ -968,8 +985,8 @@ async function heraldPlayerlist_updateHpActor() {
       movementClimbValue = `
       <div>
         <i class="fa-solid fa-hill-rockslide" style="margin-right: 5px;"></i> ${
-           actor.system.attributes.movement.climb || 0
-         } ${movementUnits}.
+          actor.system.attributes.movement.climb || 0
+        } ${movementUnits}.
       </div>`;
     }
     if (actor.system.attributes.movement.fly) {
@@ -1031,8 +1048,10 @@ async function heraldPlayerlist_updateHpActor() {
     const heightTooltip =
       actorTooltipheight + (movementValues - 1) * heightIncrementTooltip;
 
-    actorDetailTooltipDiv.style.width = `${widthTooltip}px`;
-    actorDetailTooltipDiv.style.height = `${heightTooltip}px`;
+    if (actorDetailTooltipDiv) {
+      actorDetailTooltipDiv.style.width = `${widthTooltip}px`;
+      actorDetailTooltipDiv.style.height = `${heightTooltip}px`;
+    }
 
     if (detailActorMovementDiv) {
       detailActorMovementDiv.innerHTML = `
@@ -1131,24 +1150,24 @@ async function heraldPlayerlist_updateHpActor() {
         }
       }
     }
-    if (tempHp) {
-      if (tempHp > 0) {
-        tempHpBarTop.style.width = `${tempPercentage}%`;
-        tempHpBarBottom.style.width = `${tempPercentage}%`;
-        tempValue.innerText = "+" + tempHp;
-        tempShield.innerHTML = `
-        <img src="/modules/herald-playerlist-beta/assets/temp_shield.png" alt="shield" class="heraldPlayerlist-imgtempshield" />
-        `;
+    if (tempHp && tempHp > 0) {
+      if (tempHpBarTop) tempHpBarTop.style.width = `${tempPercentage}%`;
+      if (tempHpBarBottom) tempHpBarBottom.style.width = `${tempPercentage}%`;
+      if (tempValue) tempValue.innerText = `+${tempHp}`;
+      if (tempShield) {
+        tempShield.innerHTML = `<img src="/modules/herald-playerlist-beta/assets/temp_shield.png" alt="shield" class="heraldPlayerlist-imgtempshield" />`;
       }
+
       if (tempPercentage < 10) {
-        tempHpBarTop.style.width = `${tempPercentage + 8}%`;
-        tempHpBarBottom.style.width = `${tempPercentage + 8}%`;
+        const adjustedWidth = tempPercentage + 8;
+        if (tempHpBarTop) tempHpBarTop.style.width = `${adjustedWidth}%`;
+        if (tempHpBarBottom) tempHpBarBottom.style.width = `${adjustedWidth}%`;
       }
     } else {
-      tempHpBarTop.style.width = "";
-      tempHpBarBottom.style.width = ``;
-      tempValue.innerText = "";
-      tempShield.innerHTML = ``;
+      if (tempHpBarTop) tempHpBarTop.style.width = "";
+      if (tempHpBarBottom) tempHpBarBottom.style.width = "";
+      if (tempValue) tempValue.innerText = "";
+      if (tempShield) tempShield.innerHTML = "";
     }
 
     if (armorClassDiv) {
@@ -1380,7 +1399,6 @@ async function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
 
   dialog.render(true);
 }
-
 
 function heraldPlayerlist_universalChecker() {
   setInterval(() => {
