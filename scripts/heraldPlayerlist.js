@@ -75,7 +75,7 @@ async function heraldPlayerlist_toggleShowPlayerlist() {
     heraldPlayerlist_rendered = true;
     heraldPlayerlist_getListActor();
     heraldPlayerlist_getListNpc();
-    heraldPlayerlist_getSettingValue();
+    await heraldPlayerlist_getSettingValue();
   } else {
     const existingBar = document.getElementById("heraldPlayerlist");
     if (existingBar) {
@@ -86,14 +86,14 @@ async function heraldPlayerlist_toggleShowPlayerlist() {
 }
 
 function heraldPlayerlist_createPlayerList() {
-  const existingBar = document.getElementById("heraldPlayerlist");
-  if (existingBar) {
-    existingBar.remove();
-  }
+  // const existingBar = document.getElementById("heraldPlayerlist");
+  // if (existingBar) {
+  //   existingBar.remove();
+  // }
 
   fetch("/modules/herald-playerlist-beta/templates/herald-playerlist.html")
     .then((response) => response.text())
-    .then((html) => {
+    .then(async (html) => {
       const div = document.createElement("div");
       div.innerHTML = html;
       const playerlist = div.firstChild;
@@ -102,7 +102,7 @@ function heraldPlayerlist_createPlayerList() {
       heraldPlayerlist_createCollapseActor(playerlist);
       heraldPlayerlist_createHtmlPlayerlist(playerlist);
       document.body.appendChild(playerlist);
-      heraldPlayerlist_renderlistPlayer();
+      await heraldPlayerlist_renderlistPlayer();
     })
     .catch((err) => {
       console.error("Gagal memuat template hpbar.html:", err);
@@ -142,12 +142,14 @@ function heraldPlayerlist_createCollapseActor(playerlist) {
   const collapseButton = document.createElement("button");
   collapseButton.id = "heraldPlayerlist-collapseButton";
   collapseButton.classList.add("heraldPlayerlist-collapseButton");
-  collapseButton.innerHTML = '<i class="fa-solid fa-sort" style="margin-left:2px;"></i>';
+  collapseButton.innerHTML =
+    '<i class="fa-solid fa-sort" style="margin-left:2px;"></i>';
 
   const collapseButtonNpc = document.createElement("button");
   collapseButtonNpc.id = "heraldPlayerlist-collapseButtonNpc";
   collapseButtonNpc.classList.add("heraldPlayerlist-collapseButtonNpc");
-  collapseButtonNpc.innerHTML = '<i class="fa-solid fa-users-viewfinder" style=""></i>';
+  collapseButtonNpc.innerHTML =
+    '<i class="fa-solid fa-users-viewfinder" style=""></i>';
 
   collapseContainer.appendChild(collapseButton);
   collapseContainer.appendChild(collapseButtonNpc);
@@ -180,13 +182,13 @@ async function heraldPlayerlist_toggleCollapseNpc() {
 }
 
 let heraldPlayerlist_showCollapse = false;
-function heraldPlayerlist_toggleCollapse() {
+async function heraldPlayerlist_toggleCollapse() {
   const collapseButton = document.getElementById(
     "heraldPlayerlist-collapseButton"
   );
 
   if (heraldPlayerlist_showCollapse) {
-    heraldPlayerlist_renderlistPlayer();
+    await heraldPlayerlist_renderlistPlayer();
     heraldPlayerlist_showCollapse = false;
     collapseButton.style.marginBottom = "5px";
 
@@ -195,7 +197,6 @@ function heraldPlayerlist_toggleCollapse() {
     heraldPlayerlist_renderCollapselist();
     heraldPlayerlist_showCollapse = true;
     collapseButton.style.marginBottom = "0";
- 
   }
 }
 
@@ -271,7 +272,7 @@ function heraldPlayerlist_renderCollapselist() {
   }
   divListPlayer.innerHTML = listPLayer;
 }
-function heraldPlayerlist_renderlistPlayer() {
+async function heraldPlayerlist_renderlistPlayer() {
   let listPLayer = ``;
   let divListPlayer = document.getElementById("heraldPlayerlist-listPlayer");
   const heraldPlayerlist = canvas.scene.getFlag("world", "heraldPlayerlist");
@@ -307,13 +308,13 @@ function heraldPlayerlist_renderlistPlayer() {
           <div class="heraldPlayerlist-status2">
             <div class="heraldPlayerlist-detailActorPrc" data-actor-id="${
               actor.uuid
-            }">12</div>
+            }"></div>
             <div class="heraldPlayerlist-detailActorInv" data-actor-id="${
               actor.uuid
-            }">3</div>
+            }"></div>
             <div class="heraldPlayerlist-detailActorIns" data-actor-id="${
               actor.uuid
-            }">4</div>
+            }"></div>
           </div>
         </div>
         <div class="heraldPlayerlist-characterStatus2">
@@ -331,11 +332,10 @@ function heraldPlayerlist_renderlistPlayer() {
       <div id="heraldPlayerlist-playerListContainer" class="heraldPlayerlist-playerListContainer">
         <div id="heraldPlayerlist-playerContainer" class="heraldPlayerlist-playerContainer">
           <div id="heraldPlayerlist-leftContainer" class="heraldPlayerlist-leftContainer">
-            <div class="heraldPlayerlist-actorImageContainer">
+            <div class="heraldPlayerlist-actorImageContainer" data-actor-id="${actor.uuid}">
               <img src="${actor.img}" alt="Image" class="heraldPlayerlist-actorImage" />
                ${actorTooltip}
             </div>
-            
           </div>
           <div id="heraldPlayerlist-rightContainer" class="heraldPlayerlist-rightContainer">
             <div id="heraldPlayerlist-tokenname" class="heraldPlayerlist-tokenname">
@@ -388,12 +388,23 @@ function heraldPlayerlist_renderlistPlayer() {
       container.addEventListener("mouseleave", () => {
         if (tooltip) tooltip.style.display = "none";
       });
+      container.addEventListener("dblclick", (event) => {
+        const actorId = container.getAttribute("data-actor-id");
+        const cleanActorId = actorId.replace("Actor.", "");
+        const actor = canvas.scene.tokens.find(
+          (token) => token.actor?.id === cleanActorId
+        )?.actor;
+        if (actor) {
+          actor.sheet.render(true);
+        }
+      });
     });
+  await heraldPlayerlist_updateHpActor();
+  await heraldPlayerlist_updateEffectActor();
+  await heraldPlayerlist_renderNpclist();
+  heraldPlayerlist_renderButtonCollapseNpc();
   setTimeout(async () => {
-    await heraldPlayerlist_updateHpActor();
-    heraldPlayerlist_updateEffectActor();
-    await heraldPlayerlist_renderNpclist();
-    heraldPlayerlist_renderButtonCollapseNpc();
+
   }, 500);
 }
 
@@ -471,15 +482,28 @@ function heraldPlayerlist_renderNpclistSingleActor(actor) {
           }" data-npc-id="${npc.uuid}" style="display: none;">
               <h3>${npc.name}</h3>
               <div class="heraldPlayerlist-npcStatus">
-                <div class="heraldPlayerlist-detailNpcHp" data-actor-id="${
-                  actor.uuid
-                }" data-npc-id="${npc.uuid}"></div>
-                <div class="heraldPlayerlist-detailNpcAc" data-actor-id="${
-                  actor.uuid
-                }" data-npc-id="${npc.uuid}"></div>
-                <div class="heraldPlayerlist-detailNpcMovement" data-actor-id="${
-                  actor.uuid
-                }" data-npc-id="${npc.uuid}"></div>
+                <div class="heraldPlayerlist-npcStatusLeft">
+                  <div class="heraldPlayerlist-detailNpcHp" data-actor-id="${
+                    actor.uuid
+                  }" data-npc-id="${npc.uuid}"></div>
+                  <div class="heraldPlayerlist-detailNpcAc" data-actor-id="${
+                    actor.uuid
+                  }" data-npc-id="${npc.uuid}"></div>
+                  <div class="heraldPlayerlist-detailNpcMovement" data-actor-id="${
+                    actor.uuid
+                  }" data-npc-id="${npc.uuid}"></div>
+                </div>
+                <div class="heraldPlayerlist-npcStatusRight">
+                 <div class="heraldPlayerlist-detailNpcPrc" data-actor-id="${
+                   actor.uuid
+                 }" data-npc-id="${npc.uuid}"></div>
+                  <div class="heraldPlayerlist-detailNpcInv" data-actor-id="${
+                    actor.uuid
+                  }" data-npc-id="${npc.uuid}"></div>
+                  <div class="heraldPlayerlist-detailNpcIns" data-actor-id="${
+                    actor.uuid
+                  }" data-npc-id="${npc.uuid}"></div>
+                </div>
               </div>
               <div class="heraldPlayerlist-npcStatus2">
                 <div class="heraldPlayerlist-npcLevel">
@@ -513,7 +537,7 @@ function heraldPlayerlist_renderNpclistSingleActor(actor) {
               </div>
             </div>
             <div class="heraldPlayerlist-npcWrapper">
-                <div class="heraldPlayerlist-npcImageContainer">
+                <div class="heraldPlayerlist-npcImageContainer" data-npc-id="${npc.uuid}">
                   <img src="${npc.img}" alt="npc" class="heraldPlayerlist-npcimageview">
                 </div>
                 ${npcTooltip}
@@ -553,6 +577,23 @@ function heraldPlayerlist_renderNpclistSingleActor(actor) {
 
         imageContainer.addEventListener("mouseleave", () => {
           tooltip.style.display = "none";
+        });
+
+        imageContainer.addEventListener("dblclick", (event) => {
+          const npcId = imageContainer.getAttribute("data-npc-id");
+          console.log("NPC ID:", npcId);
+          const cleanActorId = npcId.split(".Actor.").pop();
+
+          const npc = canvas.scene.tokens.find(
+            (token) => token.actor?.id === cleanActorId
+          )?.actor;
+
+          if (npc) {
+            console.log("Opening NPC sheet for:", npc.name);
+            npc.sheet.render(true);
+          } else {
+            console.log("NPC not found in the scene");
+          }
         });
       });
   }
@@ -644,7 +685,7 @@ async function heraldPlayerlist_renderNpclist() {
                 <div class="heraldPlayerlist-npcBarBorderContainer" data-actor-id="${actor.uuid}" data-npc-id="${npc.uuid}"></div>
               </div>
               <div class="heraldPlayerlist-npcWrapper">
-                <div class="heraldPlayerlist-npcImageContainer">
+                <div class="heraldPlayerlist-npcImageContainer" data-npc-id="${npc.uuid}">
                   <img src="${npc.img}" alt="npc" class="heraldPlayerlist-npcimageview">
                 </div>
                 ${npcTooltip}
@@ -683,6 +724,22 @@ async function heraldPlayerlist_renderNpclist() {
 
           imageContainer.addEventListener("mouseleave", () => {
             tooltip.style.display = "none";
+          });
+          imageContainer.addEventListener("dblclick", (event) => {
+            const npcId = imageContainer.getAttribute("data-npc-id");
+            console.log("NPC ID:", npcId);
+            const cleanActorId = npcId.split(".Actor.").pop();
+
+            const npc = canvas.scene.tokens.find(
+              (token) => token.actor?.id === cleanActorId
+            )?.actor;
+
+            if (npc) {
+              console.log("Opening NPC sheet for:", npc.name);
+              npc.sheet.render(true);
+            } else {
+              console.log("NPC not found in the scene");
+            }
           });
         });
     }
@@ -1107,7 +1164,6 @@ async function heraldPlayerlist_updateHpActor() {
     const detailActorInvestigationDiv = document.querySelector(
       `.heraldPlayerlist-detailActorInv[data-actor-id="${actor.uuid}"]`
     );
-
     const detailActorInsightDiv = document.querySelector(
       `.heraldPlayerlist-detailActorIns[data-actor-id="${actor.uuid}"]`
     );
@@ -1220,7 +1276,7 @@ async function heraldPlayerlist_updateHpActor() {
   }
 }
 
-function heraldPlayerlist_updateEffectActor() {
+async function heraldPlayerlist_updateEffectActor() {
   heraldPlayerlist_listActorCanvas = [];
   const tokens = canvas.tokens.placeables;
   for (let token of tokens) {
@@ -1464,13 +1520,13 @@ Hooks.on("updateActor", async (actor, data) => {
 Hooks.on("createToken", async () => {
   await heraldPlayerlist_getListActor();
   heraldPlayerlist_getListNpc();
-  heraldPlayerlist_getSettingValue();
+  await heraldPlayerlist_getSettingValue();
 });
 
 Hooks.on("deleteToken", async () => {
   await heraldPlayerlist_getListActor();
   heraldPlayerlist_getListNpc();
-  heraldPlayerlist_getSettingValue();
+  await heraldPlayerlist_getSettingValue();
 });
 
 function heraldPlayerlist_universalSettingValue(nameSetting, value) {
@@ -1552,7 +1608,7 @@ function heraldPlayerlist_colorSettingValue(nameSetting, value) {
   }
 }
 
-function heraldPlayerlist_getSettingValue() {
+async function heraldPlayerlist_getSettingValue() {
   const toggleShow = game.settings.get(
     "herald-playerlist-beta",
     "heraldplayerlist_toggleShow"
