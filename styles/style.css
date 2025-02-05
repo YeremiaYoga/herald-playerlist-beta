@@ -3,7 +3,7 @@
     top: 20vh;
     left: -100vw;
     transform: translateX(-50%);
-    z-index: 5;
+    z-index: 10;
     display: flex;
     flex-direction: column;
 
@@ -37,7 +37,9 @@
     width: 0;
 }
 
-.heraldPlayerlist-actorImageContainer {
+.heraldPlayerlist-actorImageContainer {}
+
+.heraldPlayerlist-actorImageDiv {
     position: relative;
     flex: 0 0 auto;
     width: 41px;
@@ -53,14 +55,17 @@
 }
 
 .heraldPlayerlist-actorImage {
-    width: 100%;
-    height: 100%;
+    width: 99%;
+    height: 99%;
     border: none;
     object-fit: cover;
     object-position: center;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
 }
-
-
 
 .heraldPlayerlist-rightContainer {
     width: 100%;
@@ -71,7 +76,7 @@
     position: absolute;
     font-weight: bold;
     margin-top: 8px;
-    color: white;
+    color: #FFA500;
     font-size: 10px;
     margin-left: 5px;
     text-shadow: 2px 2px 4px black;
@@ -363,34 +368,48 @@
 
 
 
-.heraldPlayerlist-characterStatus {
+.heraldPlayerlist-actorStatusTop {
 
     display: flex;
     gap: 15px;
 }
 
-.heraldPlayerlist-status1 {
-    gap: 5px;
+.heraldPlayerlist-actorStatusLeft div {
+    margin-bottom: 4px;
 }
 
-.heraldPlayerlist-status2 {
-    gap: 5px;
+.heraldPlayerlist-actorStatusRight div {
+    margin-bottom: 4px;
 }
 
-.heraldPlayerlist-characterStatus2 {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 10px;
-    color: white;
-}
-
-.heraldPlayerlist-actorlevel {
+.heraldPlayerlist-actorStatusBottom {
     display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    gap: 5px;
 }
 
-.heraldPlayerlist-actorlevel>div {
-    margin-right: 2px;
+.heraldPlayerlist-detailActorInspiration {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    margin-right: 10px;
+    margin-bottom: -10px;
+}
+
+.heraldPlayerlist-actorDetailStatusBottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 5px;
+    font-size: 14px;
+    padding: 5px;
+    width: 100%;
 }
 
 .heraldPlayerlist-detailActorMovement>div {
@@ -406,7 +425,7 @@
 .heraldPlayerlist-collapseButtonNpc {
     position: relative;
     left: 5%;
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.5);
     width: 30px;
     height: 30px;
     color: white;
@@ -425,7 +444,7 @@
 }
 
 .heraldPlayerlist-collapseNpclistButton {
-    font-size: 10px;
+    font-size: 12px;
     width: 15px;
     height: 15px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -477,12 +496,13 @@
 }
 
 .heraldPlayerlist-npcimageview {
-    width: 100%;
-    height: 100%;
+    width: 99%;
+    height: 99%;
     border: none;
     object-fit: cover;
     object-position: center;
     z-index: 8;
+    border-radius: 50%;
 }
 
 .heraldPlayerlist-npcTooltip {
@@ -652,7 +672,17 @@
 
 
 
-.heraldPlayerlist-npcStatus>div {
+.heraldPlayerlist-npcStatus {
+
+    display: flex;
+    gap: 15px;
+}
+
+.heraldPlayerlist-npcStatusLeft div {
+    margin-bottom: 4px;
+}
+
+.heraldPlayerlist-npcStatusRight div {
     margin-bottom: 4px;
 }
 

@@ -6,6 +6,8 @@ Hooks.on("ready", () => {
   }, 1000);
 });
 
+
+
 Hooks.on("init", () => {
   game.settings.register(
     "herald-playerlist-beta",
@@ -61,26 +63,6 @@ Hooks.on("init", () => {
       onChange: (value) => {
         herald_playerlist.heraldPlayerlist_universalSettingValue(
           "heightDistance",
-          value
-        );
-      },
-    }
-  );
-
-  game.settings.register(
-    "herald-playerlist-beta",
-    "heraldplayerlist_fontSize",
-    {
-      name: "Font Size Token Name",
-      hint: "setting font size token name",
-      scope: "world",
-      config: true,
-      type: Number,
-      default: 10,
-      category: "",
-      onChange: (value) => {
-        herald_playerlist.heraldPlayerlist_universalSettingValue(
-          "fontSize",
           value
         );
       },
