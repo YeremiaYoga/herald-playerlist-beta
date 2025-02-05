@@ -70,13 +70,10 @@ async function heraldPlayerlist_toggleShowPlayerlist() {
   if (heraldPlayerlist_rendered) {
     return;
   }
-  console.log(heraldPlayerlist_showPlayerlist);
-
   if (heraldPlayerlist_showPlayerlist == true) {
     heraldPlayerlist_rendered = true;
     setTimeout(async () => {
       heraldPlayerlist_getListActor();
-
       heraldPlayerlist_getListNpc();
       await heraldPlayerlist_getSettingValue();
     }, 1000);
@@ -596,7 +593,6 @@ async function heraldPlayerlist_renderNpclistSingleActor(actor) {
           const token = await fromUuid(npcUuid);
 
           if (token) {
-            console.log("Opening Token Sheet:", token);
             token.sheet.render(true);
           } else {
             console.warn("Token not found on the current scene.");
@@ -605,7 +601,6 @@ async function heraldPlayerlist_renderNpclistSingleActor(actor) {
       });
   }
   await heraldPlayerlist_updateDetailNpc();
-  setTimeout(async () => {}, 500);
 }
 
 function heraldPlayerlist_renderCollapseNpclist() {
