@@ -9,25 +9,25 @@ Hooks.on("ready", () => {
 
 
 Hooks.on("init", () => {
-  game.settings.register(
-    "herald-playerlist-beta",
-    "heraldplayerlist_toggleShow",
-    {
-      name: "Display Player List",
-      hint: "Toggle the display of Player List",
-      scope: "world",
-      config: true,
-      type: Boolean,
-      default: true,
-      category: "",
-      onChange: (value) => {
-        herald_playerlist.heraldPlayerlist_universalSettingValue(
-          "toggleShow",
-          value
-        );
-      },
-    }
-  );
+  // game.settings.register(
+  //   "herald-playerlist-beta",
+  //   "heraldplayerlist_toggleShow",
+  //   {
+  //     name: "Display Player List",
+  //     hint: "Toggle the display of Player List",
+  //     scope: "world",
+  //     config: true,
+  //     type: Boolean,
+  //     default: true,
+  //     category: "",
+  //     onChange: (value) => {
+  //       herald_playerlist.heraldPlayerlist_universalSettingValue(
+  //         "toggleShow",
+  //         value
+  //       );
+  //     },
+  //   }
+  // );
 
   game.settings.register(
     "herald-playerlist-beta",
