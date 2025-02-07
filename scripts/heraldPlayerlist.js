@@ -38,6 +38,7 @@ async function heraldPlayerlist_getListActor() {
       heraldPlayerlist_listActorCanvas.push({
         playerlistId: Math.random().toString(36).substr(2, 6),
         data: token.actor,
+        token: token,
       });
       listActorUuid.push(token.actor.uuid);
     }
@@ -75,15 +76,17 @@ async function heraldPlayerlist_getListNpc() {
   });
 }
 
-Hooks.on("createToken", async (token) => {
-  await heraldPlayerlist_getListActor();
+Hooks.on("createToken", async () => {
   await heraldPlayerlist_getListNpc();
+  await heraldPlayerlist_getListActor();
+
   await heraldPlayerlist_getSettingValue();
 });
 
-Hooks.on("deleteToken", async (token) => {
-  await heraldPlayerlist_getListActor();
+Hooks.on("deleteToken", async () => {
   await heraldPlayerlist_getListNpc();
+  await heraldPlayerlist_getListActor();
+
   await heraldPlayerlist_getSettingValue();
 });
 
@@ -224,7 +227,7 @@ async function heraldPlayerlist_toggleCollapseNpc() {
   } else {
     heraldPlayerlist_renderCollapseNpclist();
     heraldPlayerlist_showCollapseNpc = true;
-    collapseButtonNpc.innerHTML = `<i class="fa-solid fa-expand"></i>`;
+    collapseButtonNpc.innerHTML = `<i class="fa-solid fa-expand" style="margin-left:2px;"></i>`;
   }
 }
 
@@ -456,27 +459,27 @@ async function heraldPlayerlist_renderlistPlayer() {
         }
       });
       container.addEventListener("click", async (event) => {
-        const actorId = container.getAttribute("data-actor-id");
-        const actor = await fromUuid(actorId);
-        if (actor) {
-          const token = canvas.tokens.placeables.find(
-            (t) => t.actor?.id === actor.id
-          );
+        const playerlistId = container.getAttribute("data-playerlist-id");
 
-          if (token) {
-            token.control({ releaseOthers: true });
-            canvas.pan({ x: token.x, y: token.y });
-          }
+        const actorData = heraldPlayerlist_listActorCanvas.find(
+          (item) => item.playerlistId === playerlistId
+        );
+
+        if (actorData && actorData.token) {
+          const targetToken = actorData.token;
+
+          targetToken.control({ releaseOthers: true });
+          canvas.pan({ x: targetToken.x, y: targetToken.y });
         }
       });
     });
   await heraldPlayerlist_updateHpActor();
   await heraldPlayerlist_updateEffectActor();
   await heraldPlayerlist_renderNpclist();
-  heraldPlayerlist_renderButtonCollapseNpc();
+  await heraldPlayerlist_renderButtonCollapseNpc();
 }
 
-function heraldPlayerlist_renderButtonCollapseNpc() {
+async function heraldPlayerlist_renderButtonCollapseNpc() {
   const playerList = game.users.filter(
     (user) => user.role === CONST.USER_ROLES.PLAYER
   );
@@ -662,7 +665,7 @@ async function heraldPlayerlist_renderNpclistSingleActor(actor) {
         });
 
         imageContainer.addEventListener("dblclick", async (event) => {
-          const npcUuid = imageContainer.getAttribute("data-npc-id"); // Ensure this is the correct UUID
+          const npcUuid = imageContainer.getAttribute("data-npc-id");
 
           const token = await fromUuid(npcUuid);
 
@@ -674,13 +677,17 @@ async function heraldPlayerlist_renderNpclistSingleActor(actor) {
         });
 
         imageContainer.addEventListener("click", async (event) => {
-          const npcUuid = imageContainer.getAttribute("data-npc-id"); // Ensure this is the correct UUID
+          const npcUuid = imageContainer.getAttribute("data-npc-id");
+          const npc = await fromUuid(npcUuid);
 
-          const token = await fromUuid(npcUuid);
-
-          if (token) {
-            token.control({ releaseOthers: true });
-            canvas.pan({ x: token.x, y: token.y });
+          if (npc) {
+            const token = canvas.tokens.placeables.find(
+              (t) => t.actor?.uuid === npc.uuid
+            );
+            if (token) {
+              token.control({ releaseOthers: true });
+              canvas.pan({ x: token.x, y: token.y });
+            }
           }
         });
       });
@@ -712,7 +719,7 @@ async function heraldPlayerlist_renderNpclist() {
   );
   for (let actor of heraldPlayerlist_listActorCanvas) {
     const npclistDiv = document.querySelector(
-      `.heraldPlayerlist-npclist[data-actor-id="${actor.data.uuid}"]`
+      `.heraldPlayerlist-npclist[data-playerlist-id="${actor.playerlistId}"][data-actor-id="${actor.data.uuid}"]`
     );
     let npcActorView = ``;
     for (let user of playerList) {
@@ -788,8 +795,8 @@ async function heraldPlayerlist_renderNpclist() {
               <div>
                 <div id="heraldPlayerlist-npcbar" class="heraldPlayerlist-npcbar">
                   <svg width="50" height="50" viewBox="0 0 100 100" class="heraldPlayerlist-npchpcontainer">
-                    <circle cx="50" cy="50" r="45" id="heraldPlayerlist-npchpbackground" data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}" class="heraldPlayerlist-npchpbackground" stroke-dasharray="300" stroke-dashoffset="200" />
-                    <circle cx="50" cy="50" r="45" id="heraldPlayerlist-npchpbar" data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}" class="heraldPlayerlist-npchpbar" stroke-dasharray="300" stroke-dashoffset="200" />
+                    <circle cx="50" cy="50" r="45" id="heraldPlayerlist-npchpbackground" data-playerlist-id="${actor.playerlistId}" data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}" class="heraldPlayerlist-npchpbackground" stroke-dasharray="300" stroke-dashoffset="200" />
+                    <circle cx="50" cy="50" r="45" id="heraldPlayerlist-npchpbar" data-playerlist-id="${actor.playerlistId}" data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}" class="heraldPlayerlist-npchpbar" stroke-dasharray="300" stroke-dashoffset="200" />
                   </svg>
                 </div>
                 <div class="heraldPlayerlist-npcBarBorderContainer" data-playerlist-id="${actor.playerlistId}" data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}"></div>
@@ -836,7 +843,7 @@ async function heraldPlayerlist_renderNpclist() {
             tooltip.style.display = "none";
           });
           imageContainer.addEventListener("dblclick", async (event) => {
-            const npcUuid = imageContainer.getAttribute("data-npc-id"); // Ensure this is the correct UUID
+            const npcUuid = imageContainer.getAttribute("data-npc-id");
 
             const token = await fromUuid(npcUuid);
 
@@ -844,6 +851,20 @@ async function heraldPlayerlist_renderNpclist() {
               token.sheet.render(true);
             } else {
               console.warn("Token not found on the current scene.");
+            }
+          });
+          imageContainer.addEventListener("click", async (event) => {
+            const npcUuid = imageContainer.getAttribute("data-npc-id");
+            const npc = await fromUuid(npcUuid);
+
+            if (npc) {
+              const token = canvas.tokens.placeables.find(
+                (t) => t.actor?.uuid === npc.uuid
+              );
+              if (token) {
+                token.control({ releaseOthers: true });
+                canvas.pan({ x: token.x, y: token.y });
+              }
             }
           });
         });
@@ -925,12 +946,12 @@ async function heraldPlayerlist_updateDetailNpc() {
           npcTempBarDiv.innerHTML = `
             <div class="heraldPlayerlist-npcBarBorderTop">
               <svg width="54" height="54" viewBox="0 0 100 100" class="heraldPlayerlist-npchpcontainer">
-                <circle cx="50" cy="50" r="45" class="heraldPlayerlist-npcBorderTop" data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}" stroke-dasharray="300" stroke-dashoffset="200" />
+                <circle cx="50" cy="50" r="45" class="heraldPlayerlist-npcBorderTop" data-playerlist-id="${actor.playerlistId}"  data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}" stroke-dasharray="300" stroke-dashoffset="200" />
               </svg>
             </div>
             <div class="heraldPlayerlist-npcBarBorderBottom">
               <svg width="42" height="42" viewBox="0 0 100 100" class="heraldPlayerlist-npchpcontainer">
-                <circle cx="50" cy="50" r="45" class="heraldPlayerlist-npcBorderBottom" data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}" stroke-dasharray="300" stroke-dashoffset="200" />
+                <circle cx="50" cy="50" r="45" class="heraldPlayerlist-npcBorderBottom" data-playerlist-id="${actor.playerlistId}" data-actor-id="${actor.data.uuid}" data-npc-id="${npc.uuid}" stroke-dasharray="300" stroke-dashoffset="200" />
               </svg>
             </div>`;
         }
@@ -1433,21 +1454,20 @@ async function heraldPlayerlist_updateHpActor() {
 }
 
 async function heraldPlayerlist_updateEffectActor() {
-  heraldPlayerlist_listActorCanvas = [];
-  const tokens = canvas.tokens.placeables;
-  for (let token of tokens) {
-    if (token.actor.type == "character") {
-      heraldPlayerlist_listActorCanvas.push({
-        playerlistId: Math.random().toString(36).substr(2, 6),
-        data: token.actor,
-      });
-    }
-  }
+  // heraldPlayerlist_listActorCanvas = [];
+  // const tokens = canvas.tokens.placeables;
+  // for (let token of tokens) {
+  //   if (token.actor.type == "character") {
+  //     heraldPlayerlist_listActorCanvas.push({
+  //       playerlistId: Math.random().toString(36).substr(2, 6),
+  //       data: token.actor,
+  //     });
+  //   }
+  // }
   for (let actor of heraldPlayerlist_listActorCanvas) {
     let effectlist = ``;
     let arrEffect = [];
     for (let effect of actor.data.effects) {
-     
       arrEffect.push(effect);
     }
     for (let item of actor.data.items) {
@@ -1459,6 +1479,7 @@ async function heraldPlayerlist_updateEffectActor() {
     }
     let activeEffect = ``;
     let disableEffect = ``;
+
     arrEffect.forEach((effect) => {
       if (effect.target !== actor.data) {
         return;
@@ -1538,6 +1559,7 @@ async function heraldPlayerlist_updateEffectActor() {
       }
     });
     effectlist = activeEffect + disableEffect;
+
     if (effectlist == ``) {
       effectlist = `
         <div>
@@ -1546,7 +1568,7 @@ async function heraldPlayerlist_updateEffectActor() {
     }
 
     const listeffect = document.querySelector(
-      `.heraldPlayerlist-listeffect[data-actor-id="${actor.data.uuid}"]`
+      `.heraldPlayerlist-listeffect[data-playerlist-id="${actor.playerlistId}"][data-actor-id="${actor.data.uuid}"]`
     );
     if (listeffect) {
       listeffect.innerHTML = effectlist;
