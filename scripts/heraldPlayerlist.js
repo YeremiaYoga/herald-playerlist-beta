@@ -307,11 +307,18 @@ function heraldPlayerlist_renderCollapselist() {
   let listPLayer = ``;
   let divListPlayer = document.getElementById("heraldPlayerlist-listPlayer");
   for (let actor of heraldPlayerlist_listActorCanvas) {
+    const hp = actor.data.system.attributes.hp.value;
+    const maxHp = actor.data.system.attributes.hp.max;
+    const tempmaxhp = actor.data.system.attributes.hp.tempmax || 0;
+    const totalMaxHp = maxHp + tempmaxhp;
+    const remainingHp = totalMaxHp - hp;
+    const hpPercent = (remainingHp / totalMaxHp) * 100;
     listPLayer += `
     <div id="heraldPlayerlist-playerActor" class="heraldPlayerlist-playerActor">
       <div id="heraldPlayerlist-playerListContainer" class="heraldPlayerlist-playerListContainer">
       <div id="heraldPlayerlist-playerContainer" class="heraldPlayerlist-playerContainer">
             <div id="heraldPlayerlist-collapsePlayerContainer" class="heraldPlayerlist-collapsePlayerContainer">
+                <div class="heraldPlayerlist-collapseActorOverlay" style="height: ${hpPercent}%;"></div>
                 <img src="${actor.data.img}" alt="Image" class="heraldPlayerlist-actorImageCollapse" />
             </div>
           </div>
@@ -1605,7 +1612,6 @@ async function heraldPlayerlist_updateEffectActor() {
 }
 
 let heraldPlayerlist_dialogDeleteEffect = false;
-
 async function heraldPlayerlist_deleteEffectActor(effectId, actorUuid) {
   if (heraldPlayerlist_dialogDeleteEffect) {
     console.log("Dialog already open, preventing duplicate.");

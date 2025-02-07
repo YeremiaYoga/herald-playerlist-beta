@@ -12,7 +12,8 @@
 
 .heraldPlayerlist-container {
     display: flex;
-
+    width: 0;
+    margin-left: 3px;
 }
 
 .heraldPlayerlist-playerContainer {
@@ -83,6 +84,7 @@
 }
 
 .heraldPlayerlist-hpbarContainer {
+
     position: relative;
     margin-top: 25px;
     right: 11%;
@@ -330,6 +332,7 @@
 
 
 .heraldPlayerlist-collapsePlayerContainer {
+    position: relative;
     flex: 0 0 auto;
     width: 25px;
     height: 25px;
@@ -340,13 +343,22 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
+.heraldPlayerlist-collapseActorOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: red;
+    opacity: 0.5;
+    z-index: 1;
+}
+
 .heraldPlayerlist-actorImageCollapse {
-    width: 20px;
-    height: 20px;
+    width: 100%;
+    height: auto;
     border: none;
     object-fit: cover;
 }
-
 
 .heraldPlayerlist-actorTooltip {
     display: none;
@@ -582,7 +594,7 @@
     fill: none;
     stroke: #4caf50;
     stroke-width: 10;
-    /* transition: stroke-dashoffset 0.5s ease; */
+    transition: stroke-dashoffset 0.5s ease;
 }
 
 
@@ -593,6 +605,7 @@
     pointer-events: none;
     stroke-linecap: round;
     z-index: 6;
+    transition: stroke-dashoffset 0.5s ease;
 }
 
 
@@ -604,6 +617,11 @@
     pointer-events: none;
     stroke-linecap: round;
     z-index: 6;
+    transition: stroke-dashoffset 0.5s ease;
+    -webkit-transition: stroke-dashoffset 0.5s ease;
+    -moz-transition: stroke-dashoffset 0.5s ease;
+    -ms-transition: stroke-dashoffset 0.5s ease;
+    -o-transition: stroke-dashoffset 0.5s ease;
 }
 
 
