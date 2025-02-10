@@ -10,7 +10,28 @@ let hpgradient = "#302c2c";
 let heraldPlayerlist_showPlayerlist = true;
 
 Hooks.on("canvasReady", async () => {
-  if (canvas.scene.active == true) {
+  heraldPlayerlist_rendered = false;
+  collapseActorCreated = false;
+  HtmlPlayerlistCreated = false;
+  await heraldPlayerlist_checkAndUpdatePlayerlist();
+});
+
+Hooks.on("updateScene", async (scene, update) => {
+  if (update.active === true) {
+    await heraldPlayerlist_checkAndUpdatePlayerlist();
+  }
+});
+
+async function heraldPlayerlist_resetPlayerlist() {
+  heraldPlayerlist_rendered = false;
+  collapseActorCreated = false;
+  HtmlPlayerlistCreated = false;
+  await heraldPlayerlist_renderHtml();
+  await heraldPlayerlist_toggleShowPlayerlist();
+}
+
+async function heraldPlayerlist_checkAndUpdatePlayerlist() {
+  if (canvas.scene.active) {
     await heraldPlayerlist_renderHtml();
     await heraldPlayerlist_toggleShowPlayerlist();
   } else {
@@ -21,7 +42,7 @@ Hooks.on("canvasReady", async () => {
       existingBar.remove();
     }
   }
-});
+}
 async function heraldPlayerlist_getListActor() {
   let listActorUuid = [];
 
@@ -33,7 +54,9 @@ async function heraldPlayerlist_getListActor() {
 
   heraldPlayerlist_listActorCanvas = [];
   const tokens = canvas.tokens.placeables;
+  console.log(tokens);
   for (let token of tokens) {
+    console.log(token.actor);
     if (token.actor.type == "character") {
       heraldPlayerlist_listActorCanvas.push({
         playerlistId: Math.random().toString(36).substr(2, 6),
@@ -95,6 +118,7 @@ async function heraldPlayerlist_toggleShowPlayerlist() {
   if (heraldPlayerlist_rendered) {
     return;
   }
+
   if (heraldPlayerlist_showPlayerlist == true) {
     heraldPlayerlist_rendered = true;
     setTimeout(async () => {
@@ -1871,4 +1895,5 @@ export {
   heraldPlayerlist_getSettingValue,
   heraldPlayerlist_universalSettingValue,
   heraldPlayerlist_colorSettingValue,
+  heraldPlayerlist_resetPlayerlist,
 };
