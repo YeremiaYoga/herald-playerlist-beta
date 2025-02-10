@@ -1,3 +1,31 @@
+.heraldPlayerlist-resetButtonContainer {
+    position: fixed;
+    bottom: 2vh;
+    left: 69vw;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.heraldPlayerlist-resetButton {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 30px;
+    height: 30px;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
 .heraldPlayerlist {
     position: fixed;
     top: 20vh;
@@ -9,6 +37,8 @@
 
     width: 190px;
 }
+
+
 
 .heraldPlayerlist-container {
     display: flex;

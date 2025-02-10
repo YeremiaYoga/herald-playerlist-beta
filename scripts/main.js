@@ -2,26 +2,9 @@ import * as herald_playerlist from "./heraldPlayerlist.js";
 
 Hooks.on("ready", () => {
   setTimeout(() => {
+    herald_playerlist.heraldPlayerlist_resetButton();
     herald_playerlist.heraldPlayerlist_universalChecker();
   }, 1000);
-});
-
-Hooks.on("getSceneControlButtons", (controls) => {
-  if (!game.user.isGM) return;
-  const tokenControls = controls.find((control) => control.name === "token");
-  if (tokenControls) {
-    tokenControls.tools.push({
-      name: "herald-playerlist",
-      title: "Herald Playerlist",
-      icon: "fa-solid fa-hand-holding-heart",
-      visible: true,
-      toggle: true,
-      onClick: () => {
-        herald_playerlist.heraldPlayerlist_resetPlayerlist();
-      },
-      button: true,
-    });
-  }
 });
 
 Hooks.on("init", () => {

@@ -22,7 +22,46 @@ Hooks.on("updateScene", async (scene, update) => {
   }
 });
 
+function heraldPlayerlist_resetButton() {
+  const existingBar = document.getElementById(
+    "heraldPlayerlist-resetButtonContainer"
+  );
+  if (existingBar) {
+    existingBar.remove();
+  }
+  console.log("masuk");
+  fetch(
+    "/modules/herald-playerlist-beta/templates/heraldPlayerlist-resetButton.html"
+  )
+    .then((response) => response.text())
+    .then((html) => {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      const playerlist = div.firstChild;
+      playerlist.id = "heraldPlayerlist-resetButtonContainer";
+
+      const resetButton = document.createElement("button");
+      resetButton.id = "heraldPlayerlist-resetButton";
+      resetButton.classList.add("heraldPlayerlist-resetButton");
+      resetButton.innerHTML =
+        '<i class="fa-solid fa-hand-holding-heart" style="margin-left:2px;"></i>';
+      resetButton.addEventListener("click", function () {
+        heraldPlayerlist_resetPlayerlist();
+      });
+
+      playerlist.appendChild(resetButton);
+      document.body.appendChild(playerlist);
+    })
+    .catch((err) => {
+      console.error("Gagal memuat template resetButton playerlist.html: ", err);
+    });
+}
+
 async function heraldPlayerlist_resetPlayerlist() {
+  const existingBar = document.getElementById("heraldPlayerlist");
+  if (existingBar) {
+    existingBar.remove();
+  }
   heraldPlayerlist_rendered = false;
   collapseActorCreated = false;
   HtmlPlayerlistCreated = false;
@@ -147,8 +186,6 @@ async function heraldPlayerlist_renderHtml() {
     const playerlist = div.firstChild;
     playerlist.id = "heraldPlayerlist";
 
-    // await heraldPlayerlist_createCollapseActor(playerlist);
-    // await heraldPlayerlist_createHtmlPlayerlist(playerlist);
     document.body.appendChild(playerlist);
   } catch (err) {
     console.error("Failed to load template herald-playerlist.html:", err);
@@ -336,13 +373,16 @@ function heraldPlayerlist_renderCollapselist() {
     const tempmaxhp = actor.data.system.attributes.hp.tempmax || 0;
     const totalMaxHp = maxHp + tempmaxhp;
     const remainingHp = totalMaxHp - hp;
-    const hpPercent = (remainingHp / totalMaxHp) * 100;
+    let hpPercent = (remainingHp / totalMaxHp) * 100;
+    if (hpPercent > 100) {
+      hpPercent = 100;
+    }
     listPLayer += `
     <div id="heraldPlayerlist-playerActor" class="heraldPlayerlist-playerActor">
       <div id="heraldPlayerlist-playerListContainer" class="heraldPlayerlist-playerListContainer">
       <div id="heraldPlayerlist-playerContainer" class="heraldPlayerlist-playerContainer">
             <div id="heraldPlayerlist-collapsePlayerContainer" class="heraldPlayerlist-collapsePlayerContainer">
-                <div class="heraldPlayerlist-collapseActorOverlay" style="height: ${hpPercent}%;"></div>
+                <div class="heraldPlayerlist-collapseActorOverlay" data-playerlist-id="${actor.playerlistId}" data-actor-id="${actor.data.uuid}" style="height: ${hpPercent}%;"></div>
                 <img src="${actor.data.img}" alt="Image" class="heraldPlayerlist-actorImageCollapse" />
             </div>
           </div>
@@ -351,6 +391,26 @@ function heraldPlayerlist_renderCollapselist() {
     </div>`;
   }
   divListPlayer.innerHTML = listPLayer;
+}
+
+async function heraldPlayerlist_updateCollapselist() {
+  for (let actor of heraldPlayerlist_listActorCanvas) {
+    const hp = actor.data.system.attributes.hp.value;
+    const maxHp = actor.data.system.attributes.hp.max;
+    const tempmaxhp = actor.data.system.attributes.hp.tempmax || 0;
+    const totalMaxHp = maxHp + tempmaxhp;
+    const remainingHp = totalMaxHp - hp;
+    let hpPercent = (remainingHp / totalMaxHp) * 100;
+    if (hpPercent > 100) {
+      hpPercent = 100;
+    }
+    const overlayHpDiv = document.querySelector(
+      `.heraldPlayerlist-collapseActorOverlay[data-playerlist-id="${actor.playerlistId}"][data-actor-id="${actor.data.uuid}"]`
+    );
+    if (overlayHpDiv) {
+      overlayHpDiv.style.height = `${hpPercent}%`;
+    }
+  }
 }
 async function heraldPlayerlist_renderlistPlayer() {
   let listPLayer = ``;
@@ -556,7 +616,7 @@ async function heraldPlayerlist_renderButtonCollapseNpc() {
 
 function heraldPlayerlist_collapseNpclistActor(actor) {
   const npcListDiv = document.querySelector(
-    `.heraldPlayerlist-npclist[data-playerlist-id="${actor.playerlistId}"][data-playerlist-id="${actor.playerlistId}"][data-actor-id="${actor.data.uuid}"]`
+    `.heraldPlayerlist-npclist[data-playerlist-id="${actor.playerlistId}"][data-actor-id="${actor.data.uuid}"]`
   );
 
   if (npcListDiv.innerHTML.trim() === "") {
@@ -571,7 +631,7 @@ async function heraldPlayerlist_renderNpclistSingleActor(actor) {
     (user) => user.role === CONST.USER_ROLES.PLAYER
   );
   const npclistDiv = document.querySelector(
-    `.heraldPlayerlist-npclist[data-playerlist-id="${actor.playerlistId}"][data-playerlist-id="${actor.playerlistId}"][data-actor-id="${actor.data.uuid}"]`
+    `.heraldPlayerlist-npclist[data-playerlist-id="${actor.playerlistId}"][data-actor-id="${actor.data.uuid}"]`
   );
   let npcActorView = ``;
   for (let user of playerList) {
@@ -1749,6 +1809,7 @@ Hooks.on("updateActor", async (actor, data) => {
   if (heraldPlayerlist) {
     await heraldPlayerlist_updateDetailNpc();
     heraldPlayerlist_updateHpActor();
+    heraldPlayerlist_updateCollapselist();
     heraldPlayerlist_updateEffectActor();
   }
 });
@@ -1891,6 +1952,7 @@ async function heraldPlayerlist_getSettingValue() {
 }
 
 export {
+  heraldPlayerlist_resetButton,
   heraldPlayerlist_universalChecker,
   heraldPlayerlist_getSettingValue,
   heraldPlayerlist_universalSettingValue,
