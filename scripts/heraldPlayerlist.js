@@ -29,7 +29,6 @@ function heraldPlayerlist_resetButton() {
   if (existingBar) {
     existingBar.remove();
   }
-  console.log("masuk");
   fetch(
     "/modules/herald-playerlist-beta/templates/heraldPlayerlist-resetButton.html"
   )
@@ -93,9 +92,7 @@ async function heraldPlayerlist_getListActor() {
 
   heraldPlayerlist_listActorCanvas = [];
   const tokens = canvas.tokens.placeables;
-  console.log(tokens);
   for (let token of tokens) {
-    console.log(token.actor);
     if (token.actor.type == "character") {
       heraldPlayerlist_listActorCanvas.push({
         playerlistId: Math.random().toString(36).substr(2, 6),
